@@ -1,12 +1,18 @@
-// Middleware function for handling errors
-const errorHandler = (error, _req, res) => {
-  console.error(
-    'Error: Status Code:', error.status, ' Message:', error.message);
-  const statusCode = error.status || 500;
-  const message = error.message || 'Internal server error';
-  return res.status(statusCode).send({
-    status: statusCode,
-    message,
+const { ApiError } = require('../utils/helpers');
+
+const errorHandler = (error, _req, res, _next) => {
+  if (error instanceof ApiError) {
+    console.error('Error: Status Code:', error.statusCode, ' Message:', error.message);
+    return res.status(error.statusCode).json({
+      success: false,
+      message: error.message,
+    });
+  }
+  console.error('Error: Status Code:', 500, ' Message : Internal Server Error');
+
+  res.status(500).json({
+    success: false,
+    message: 'Internal Server Error',
   });
 };
 
