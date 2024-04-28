@@ -1,4 +1,3 @@
-// import { useState } from 'react';
 import {
   Box,
   Container,
@@ -9,8 +8,6 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 const AdminLogin = () => {
-  //states
-
   const navigate = useNavigate();
 
   const handleLogin = () => {
@@ -19,7 +16,7 @@ const AdminLogin = () => {
 
   return (
     <Container
-      maxWidth="sm"
+      maxWidth='sm'
       sx={{
         display: 'flex',
         flexDirection: 'column',
@@ -37,31 +34,31 @@ const AdminLogin = () => {
           maxWidth: '500px'
         }}
       >
-        <Typography variant="h2" align="center" gutterBottom>
+        <Typography variant='h2' align='center' gutterBottom>
           Admin Login
         </Typography>
         <form style={{ width: '100%' }}>
           <TextField
             fullWidth
-            id="email"
-            label="Email"
-            variant="outlined"
-            margin="normal"
+            id='email'
+            label='Email'
+            variant='outlined'
+            margin='normal'
             required
           />
           <TextField
             fullWidth
-            id="password"
-            label="Password"
-            variant="outlined"
-            type="password"
-            margin="normal"
+            id='password'
+            label='Password'
+            variant='outlined'
+            type='password'
+            margin='normal'
             required
           />
           <Button
-            type="submit"
-            variant="contained"
-            color="primary"
+            type='submit'
+            variant='contained'
+            color='primary'
             fullWidth
             style={{
               marginTop: '20px',

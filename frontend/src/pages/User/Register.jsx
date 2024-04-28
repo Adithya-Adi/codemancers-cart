@@ -13,17 +13,15 @@ import { useNavigate } from 'react-router-dom';
 import GoogleIcon from '@mui/icons-material/Google';
 
 const Register = () => {
-  // States
   const navigate = useNavigate();
 
   const handleRegister = () => {
-    // Logic for registering the user
-    navigate('/login'); // Redirect to login page after successful registration
+    navigate('/login'); 
   };
 
   return (
     <Container
-      maxWidth="sm"
+      maxWidth='sm'
       sx={{
         display: 'flex',
         flexDirection: 'column',
@@ -41,63 +39,63 @@ const Register = () => {
           maxWidth: '500px',
         }}
       >
-        <Typography variant="h2" align="center" gutterBottom>
+        <Typography variant='h2' align='center' gutterBottom>
           Register
         </Typography>
         <form style={{ width: '100%' }}>
           <TextField
             fullWidth
-            id="name"
-            label="Name"
-            variant="outlined"
-            margin="normal"
+            id='name'
+            label='Name'
+            variant='outlined'
+            margin='normal'
             required
           />
           <TextField
             fullWidth
-            id="email"
-            label="Email"
-            variant="outlined"
-            margin="normal"
+            id='email'
+            label='Email'
+            variant='outlined'
+            margin='normal'
             required
           />
           <TextField
             fullWidth
-            id="password"
-            label="Password"
-            variant="outlined"
-            type="password"
-            margin="normal"
+            id='password'
+            label='Password'
+            variant='outlined'
+            type='password'
+            margin='normal'
             required
           />
           <TextField
             fullWidth
-            id="cpassword"
-            label="Confirm Password"
-            variant="outlined"
-            type="password"
-            margin="normal"
+            id='cpassword'
+            label='Confirm Password'
+            variant='outlined'
+            type='password'
+            margin='normal'
             required
           />
           <Button
-            type="submit"
-            variant="contained"
-            color="primary"
+            type='submit'
+            variant='contained'
+            color='primary'
             fullWidth
             style={{ marginTop: '20px' }}
             onClick={handleRegister}
           >
             Register
           </Button>
-          <Typography variant="body2" align="center" mt={2} mb={3}>
+          <Typography variant='body2' align='center' mt={2} mb={3}>
             Already have an account?{' '}
-            <Link component={RouterLink} to="/">
+            <Link component={RouterLink} to='/'>
               Login
             </Link>
           </Typography>
           <Divider />
           {/* Social login */}
-          <Typography variant="body2" align="center" mt={2}>
+          <Typography variant='body2' align='center' mt={2}>
             Or register with
           </Typography>
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>

@@ -15,8 +15,6 @@ import { useNavigate } from 'react-router-dom';
 
 
 const Login = () => {
-  //states
-
   const navigate = useNavigate();
 
   const handleLogin = () => {
@@ -25,7 +23,7 @@ const Login = () => {
 
   return (
     <Container
-      maxWidth="sm"
+      maxWidth='sm'
       sx={{
         display: 'flex',
         flexDirection: 'column',
@@ -43,46 +41,43 @@ const Login = () => {
           maxWidth: '500px'
         }}
       >
-        <Typography variant="h2" align="center" gutterBottom>
+        <Typography variant='h2' align='center' gutterBottom>
           Login
         </Typography>
         <form style={{ width: '100%' }}>
           <TextField
             fullWidth
-            id="email"
-            label="Email"
-            variant="outlined"
-            margin="normal"
+            id='email'
+            label='Email'
+            variant='outlined'
+            margin='normal'
             required
           />
           <TextField
             fullWidth
-            id="password"
-            label="Password"
-            variant="outlined"
-            type="password"
-            margin="normal"
+            id='password'
+            label='Password'
+            variant='outlined'
+            type='password'
+            margin='normal'
             required
           />
           <Button
-            type="submit"
-            variant="contained"
-            color="primary"
+            type='submit'
+            variant='contained'
+            color='primary'
             fullWidth
             style={{ marginTop: '20px' }}
             onClick={handleLogin}
           >
             Login
           </Button>
-          <Typography variant="body2" align="center" mt={2}>
-            <Link href="#">Forgot Password?</Link>
-          </Typography>
-          <Typography variant="body2" align="center" mt={2} mb={3}>
-            Don&apos;t have an account? <Link component={RouterLink} to="/register">Register</Link>
+          <Typography variant='body2' align='center' mt={2} mb={3}>
+            Don&apos;t have an account? <Link component={RouterLink} to='/register'>Register</Link>
           </Typography>
           <Divider />
           {/* Social login */}
-          <Typography variant="body2" align="center" mt={2}>
+          <Typography variant='body2' align='center' mt={2}>
             Or sign in with
           </Typography>
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>

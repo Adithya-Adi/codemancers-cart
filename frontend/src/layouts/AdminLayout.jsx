@@ -1,16 +1,16 @@
-import NavBar from '../components/User/NavBar';
+import AdminNavBar from '../components/Admin/AdminNavBar';
 import Footer from '../components/Common/Footer';
 import { Outlet } from 'react-router-dom';
 
-function UserLayout() {
+function AdminLayout() {
 
   return (
     <>
-      <NavBar />
+      <AdminNavBar />
       <Outlet />
       <Footer />
     </>
   );
 }
 
-export default UserLayout;
+export default AdminLayout;
