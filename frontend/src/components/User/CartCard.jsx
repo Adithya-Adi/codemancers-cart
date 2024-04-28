@@ -17,11 +17,11 @@ const CartCard = ({ item, increaseQuantity, decreaseQuantity, removeItem }) => {
     <Card variant='outlined'>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={4}>
-          <CardMedia 
-            component='img' 
-            image={item.image} 
-            alt={item.name} 
-            style={{ width: '100%', height: 'auto', borderRadius: '8px' }} 
+          <CardMedia
+            component='img'
+            image={item.image}
+            alt={item.name}
+            style={{ width: '100%', height: 'auto', borderRadius: '8px' }}
           />
         </Grid>
         <Grid item xs={12} sm={8}>

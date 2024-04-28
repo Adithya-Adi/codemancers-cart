@@ -6,6 +6,7 @@ import {
   Checkbox,
   FormControlLabel,
   Grid,
+  Container,
 } from '@mui/material';
 import ProductCard from '../../components/User/ProductCard';
 
@@ -91,11 +92,11 @@ const Home = () => {
   });
 
   return (
-    <>
-      <Typography variant='h6' gutterBottom pl={8}>
+    <Container maxWidth="lg">
+      <Typography variant='h6' gutterBottom>
         Hello adithyahebbar32@gmail.com!
       </Typography>
-      <Box p={8}>
+      <Box p={2}>
         <TextField
           placeholder='Search products...'
           value={searchTerm}
@@ -103,9 +104,9 @@ const Home = () => {
           fullWidth
           variant='outlined'
           margin='normal'
-          mb={4}
+          mb={2}
         />
-        <Box mb={4}>
+        <Box mb={2}>
           <Typography variant='subtitle1'>Category</Typography>
           <FormControlLabel
             control={<Checkbox color='primary' onChange={handleCategoryChange} value='Shirts' />}
@@ -120,7 +121,7 @@ const Home = () => {
             label='Shoes'
           />
         </Box>
-        <Grid container spacing={4}>
+        <Grid container spacing={2}>
           {filteredProducts.map((product) => (
             <Grid item key={product.id} xs={12} sm={6} md={4} lg={3}>
               <ProductCard product={product} />
@@ -128,7 +129,7 @@ const Home = () => {
           ))}
         </Grid>
       </Box>
-    </>
+    </Container>
   );
 };
 
