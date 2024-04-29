@@ -52,9 +52,6 @@ const deleteProduct = async (productId) => {
 
 const getAllProducts = async () => {
   const products = await Product.find();
-  if (products.length === 0) {
-    throw new ApiError(404, 'Products not found');
-  }
   return {
     status: 200,
     message: 'Products Retrieved',

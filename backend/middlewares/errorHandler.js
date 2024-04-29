@@ -8,7 +8,7 @@ const errorHandler = (error, _req, res, _next) => {
       message: error.message,
     });
   }
-  console.error('Error: Status Code:', 500, ' Message : Internal Server Error');
+  console.error('Error: Status Code:', 500, ' Message : Internal Server Error - Error:', error);
 
   res.status(500).json({
     success: false,

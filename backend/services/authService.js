@@ -10,7 +10,7 @@ const registerUser = async (userData) => {
   if (!fullName || !email || !phoneNumber || !password) {
     throw new ApiError(404, 'Incomplete User Data');
   }
-  const userExists = await User.findOne({ $or: [{ email }, { phoneNumber }] });
+  const userExists = await User.findOne({ email });
   if (userExists) {
     throw new ApiError(409, 'User already exists');
   }
