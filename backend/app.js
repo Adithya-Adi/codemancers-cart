@@ -17,7 +17,7 @@ const app = express();
 const allowedOrigins = ['http://localhost:5173', 'https://codemancers-cart.netlify.app'];
 
 // Middleware
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('combined'));
 app.use(helmet());
