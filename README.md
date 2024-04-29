@@ -1,6 +1,6 @@
 # Codemancers Cart
 
-This repository contains the code for Codemancers Cart, an e-commerce platform.
+Ecommerce Webiste
 
 ## Links
 
