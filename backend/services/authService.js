@@ -62,6 +62,7 @@ const googleLogin = async (credential) => {
       $setOnInsert: {
         email,
         fullName: name,
+        phoneNumber: '',
       },
     },
     {
