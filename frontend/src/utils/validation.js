@@ -89,3 +89,38 @@ export const validateConfirmPassword = (password, confirmPassword) => {
   }
   return errors;
 };
+
+export const validateAddress = (address) => {
+  const errors = {};
+  if (!address.trim()) {
+    errors.address = '* Address is required';
+  }
+  return errors;
+};
+
+export const validateCity = (city) => {
+  const errors = {};
+  if (!city.trim()) {
+    errors.city = '* City is required';
+  }
+  return errors;
+};
+
+export const validatePostalCode = (postalCode) => {
+  const errors = {};
+  const postalCodePattern = /^\d{6}$/;
+  if (!postalCode) {
+    errors.postalCode = '* Postal code is required';
+  } else if (!postalCodePattern.test(postalCode)) {
+    errors.postalCode = '* Please enter a valid 6-digit postal code';
+  }
+  return errors;
+};
+
+export const validateCountry = (country) => {
+  const errors = {};
+  if (!country.trim()) {
+    errors.country = '* Country is required';
+  }
+  return errors;
+};

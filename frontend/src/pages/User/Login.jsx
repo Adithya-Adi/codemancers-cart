@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import {
   Box,
   Link,
-  IconButton,
   Divider,
   Container,
   Typography,
@@ -187,9 +186,7 @@ const Login = () => {
             Or sign in with
           </Typography>
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-            <IconButton>
               <div id="googlesignin" className="mx-auto"></div>
-            </IconButton>
           </Box>
         </form>
       </Box>

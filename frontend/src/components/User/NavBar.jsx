@@ -3,21 +3,14 @@ import {
   Toolbar,
   IconButton,
   Typography,
-  Badge,
   Button
 } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp'; // Import the ExitToAppIcon
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from "react-redux";
-import {
-  selectTotalItems,
-} from '../../services/state/slices/cartSlice';
 
 const NavBar = () => {
   const navigate = useNavigate();
-  const cartItemCount = useSelector(selectTotalItems);
-
   const handleLogout = () => {
     const confirmed = window.confirm('Are you sure you want to log out?');
     if (confirmed) {
@@ -39,10 +32,9 @@ const NavBar = () => {
           color='inherit'
           aria-label='cart'
           onClick={() => navigate('/cart')}
+          sx={{marginRight: 2}}
         >
-          <Badge badgeContent={cartItemCount} color='error' sx={{ marginRight: 3 }}>
-            <ShoppingCartIcon />
-          </Badge>
+          <ShoppingCartIcon />
         </IconButton>
         <Button color="inherit" startIcon={<ExitToAppIcon />} onClick={handleLogout}>Logout</Button>
       </Toolbar>

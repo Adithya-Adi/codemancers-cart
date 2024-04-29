@@ -5,7 +5,6 @@ const orderEventEmitter = require('../subscribers/orderSubscription');
 
 const createOrder = async (orderData) => {
   const { userId, products, totalPrice, billingDetails } = orderData;
-  console.log(orderData);
   if (
     !userId ||
     !products ||

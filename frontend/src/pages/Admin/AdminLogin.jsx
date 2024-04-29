@@ -45,7 +45,6 @@ const AdminLogin = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLoading(true);
     const emailErrors = validateEmail(formData.email);
     const passwordErrors = validatePassword(formData.password);
     const errors = {
@@ -57,6 +56,7 @@ const AdminLogin = () => {
     if (hasErrors) {
       return;
     }
+    setLoading(true);
     try {
       const loginResponse = await AuthAPI.adminLogin(formData);
       localStorage.setItem('admin_token', loginResponse.token);

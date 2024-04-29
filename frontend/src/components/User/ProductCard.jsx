@@ -7,13 +7,9 @@ import {
   Button,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import {
-  addProduct,
-  removeProduct,
-  selectProducts
-} from '../../services/state/slices/cartSlice';
-import { useDispatch, useSelector } from "react-redux";
 import toast from 'react-hot-toast';
+import { CartAPI } from '../../services/apis/cartAPI';
+import { useEffect, useState } from 'react';
 
 const StyledCard = styled(Card)(() => ({
   display: 'flex',
@@ -32,23 +28,36 @@ const StyledCardContent = styled(CardContent)(() => ({
 }));
 
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, cartDetails }) => {
   const { _id, title, price, image, description } = product;
-  const dispatch = useDispatch();
-  const cartItems = useSelector(selectProducts);
+  const [isInCart, setIsInCart] = useState([]);
+  const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
 
-  const isInCart = cartItems.some(item => item.productId === _id);
+  useEffect(() => {
+    const isIn = cartDetails?.products?.some(item => item.productId === _id)
+    setIsInCart(isIn);
+  }, [_id, cartDetails]);
 
-  const handleAddToCart = (e) => {
+  const handleAddToCart = async (e) => {
     e.preventDefault();
-    dispatch(addProduct(product));
-    toast.success('Added to cart');
+    try {
+      const addToCartResponse = await CartAPI.addToCart(loggedInUser._id, _id);
+      toast.success(addToCartResponse.message);
+      setIsInCart(true);
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
   };
 
-  const handleRemoveFromCart = (e) => {
+  const handleRemoveFromCart = async (e) => {
     e.preventDefault();
-    dispatch(removeProduct(_id));
-    toast.success('Removed from cart');
+    try {
+      const removeFromCartResponse = await CartAPI.removeFromCart(loggedInUser._id, _id)
+      toast.success(removeFromCartResponse.message);
+      setIsInCart(false);
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
   };
 
   return (
@@ -81,4 +90,3 @@ const ProductCard = ({ product }) => {
 };
 
 export default ProductCard;
-
