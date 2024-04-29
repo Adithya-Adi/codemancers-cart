@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const morgan = require('morgan');
 const helmet = require('helmet');
-const connectToDatabase = require('./config/database');
+const connectToDatabase = require('./config/databaseConfig');
 const errorHandler = require('./middlewares/errorHandler');
 
 // routes
@@ -26,6 +26,16 @@ app.use(cors({
   credentials: true,
 }));
 
+// connect to db
+connectToDatabase()
+  .then(() => {
+    console.log('Connected to the database');
+  })
+  .catch((error) => {
+    console.error('Failed to connect to the database:', error);
+    process.exit(1);
+  });
+
 // Routes
 app.get('/', (_req, res) => {
   res.status(200).send('Codemancers-Cart Backend');
@@ -45,12 +55,4 @@ app.use('*', (_req, res) =>
     message: 'Invalid route',
   }));
 
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, async () => {
-  try {
-    await connectToDatabase();
-    console.log(`Server is running on port ${PORT}`);
-  } catch (error) {
-    console.error('Failed to connect to the database:', error);
-  }
-});
+module.exports = app;

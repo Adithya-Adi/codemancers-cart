@@ -4,9 +4,9 @@
   "description": "Codemancers-cart Backend",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js",
+    "start": "nodemon bin/server.js",
     "eslint:fix": "eslint --fix ./*.js",
-    "test": "mocha"
+    "test": "npx mocha --exit"
   },
   "author": "",
   "license": "ISC",

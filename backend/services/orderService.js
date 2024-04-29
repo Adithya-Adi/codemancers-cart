@@ -18,7 +18,7 @@ const createOrder = async (orderData) => {
     !billingDetails.postalCode ||
     !billingDetails.country
   ) {
-    throw new ApiError(404, 'Incomplete Product Data');
+    throw new ApiError(404, 'Incomplete Order Data');
   }
   const user = await User.findById(userId);
   if (!user) {
