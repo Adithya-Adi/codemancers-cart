@@ -5,13 +5,14 @@ const {
   getAllProductsController,
   getProductByIdController,
 } = require('../controllers/productController');
+const { authenticateAdmin, authenticateUser } = require('../middlewares/auth');
 const express = require('express');
 const router = express.Router();
 
-router.post('/', addProductController);
-router.patch('/:id', updateProductController);
-router.delete('/:id', deleteProductController);
-router.get('/', getAllProductsController);
-router.get('/:id', getProductByIdController);
+router.post('/', authenticateAdmin, addProductController);
+router.patch('/:id', authenticateAdmin, updateProductController);
+router.delete('/:id', authenticateAdmin, deleteProductController);
+router.get('/', authenticateUser, getAllProductsController);
+router.get('/:id', authenticateUser, getProductByIdController);
 
 module.exports = router;
