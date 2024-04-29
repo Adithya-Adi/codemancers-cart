@@ -5,6 +5,7 @@ import {
   CardContent,
   CardMedia,
   Button,
+  CircularProgress,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import toast from 'react-hot-toast';
@@ -29,8 +30,9 @@ const StyledCardContent = styled(CardContent)(() => ({
 
 
 const ProductCard = ({ product, cartDetails }) => {
-  const { _id, title, price, image, description } = product;
+  const [loading, setLoading] = useState(false);
   const [isInCart, setIsInCart] = useState([]);
+  const { _id, title, price, image, description } = product;
   const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
 
   useEffect(() => {
@@ -41,22 +43,28 @@ const ProductCard = ({ product, cartDetails }) => {
   const handleAddToCart = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const addToCartResponse = await CartAPI.addToCart(loggedInUser._id, _id);
       toast.success(addToCartResponse.message);
       setIsInCart(true);
     } catch (error) {
       toast.error(error.response.data.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleRemoveFromCart = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const removeFromCartResponse = await CartAPI.removeFromCart(loggedInUser._id, _id)
       toast.success(removeFromCartResponse.message);
       setIsInCart(false);
     } catch (error) {
       toast.error(error.response.data.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -77,11 +85,19 @@ const ProductCard = ({ product, cartDetails }) => {
         </Typography>
         {isInCart ? (
           <Button variant='contained' color='secondary' onClick={handleRemoveFromCart} fullWidth>
-            Remove from Cart
+            {loading ?
+              <CircularProgress color="inherit" sx={{ color: '#fff' }} />
+              :
+              'Remove from Cart'
+            }
           </Button>
         ) : (
           <Button variant='contained' color='primary' onClick={handleAddToCart} fullWidth>
-            Add to Cart
+            {loading ?
+              <CircularProgress color="inherit" sx={{ color: '#fff' }} />
+              :
+              'Add to Cart'
+            }
           </Button>
         )}
       </Box>
