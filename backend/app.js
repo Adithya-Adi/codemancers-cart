@@ -14,7 +14,7 @@ const userRoutes = require('./routes/userRoutes');
 
 dotenv.config();
 const app = express();
-const allowedOrigins = ['http://localhost:5173'];
+const allowedOrigins = ['http://localhost:5173', 'https://codemancers-cart.netlify.app'];
 
 // Middleware
 app.use(express.json());
