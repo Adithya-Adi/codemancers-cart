@@ -14,13 +14,17 @@ const userRoutes = require('./routes/userRoutes');
 
 dotenv.config();
 const app = express();
+const allowedOrigins = ['http://localhost:5173'];
 
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('combined'));
 app.use(helmet());
-app.use(cors());
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,
+}));
 
 // Routes
 app.get('/', (_req, res) => {

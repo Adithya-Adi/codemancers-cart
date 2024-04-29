@@ -1,4 +1,4 @@
-// import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Box,
   Link,
@@ -8,17 +8,77 @@ import {
   Typography,
   TextField,
   Button,
+  FormHelperText,
+  CircularProgress,
 } from '@mui/material';
 import GoogleIcon from '@mui/icons-material/Google';
 import { Link as RouterLink } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-
+import { validateEmail, validatePassword } from '../../utils/validation';
+import { AuthAPI } from '../../services/apis/authAPI';
+import toast from 'react-hot-toast';
 
 const Login = () => {
+  //states
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
+  const [validationErrors, setValidationErrors] = useState({
+    email: '',
+    password: '',
+  });
+
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    navigate('/');
+  // useeffects
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem('loggedInUser');
+    const token = localStorage.getItem('token');
+    if (loggedInUser && token) {
+      navigate('/home');
+    }
+  }, [navigate])
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    const emailErrors = validateEmail(formData.email);
+    const passwordErrors = validatePassword(formData.password);
+    const errors = {
+      ...emailErrors,
+      ...passwordErrors,
+    };
+    setValidationErrors(errors);
+    const hasErrors = Object.values(errors).some((error) => !!error);
+    if (hasErrors) {
+      return;
+    }
+    try {
+      const loginResponse = await AuthAPI.userLogin(formData);
+      localStorage.setItem('token', loginResponse.token);
+      localStorage.setItem('loggedInUser', JSON.stringify(loginResponse.data));
+      toast.success(loginResponse.message)
+      setTimeout(() => {
+        navigate('/home');
+        toast(`Hello ${loginResponse.data.email}!`, {
+          icon: '👋',
+        });
+      }, 1000);
+    } catch (error) {
+      toast.error(error.response.data.message)
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -48,20 +108,24 @@ const Login = () => {
           <TextField
             fullWidth
             id='email'
-            label='Email'
+            label='Email *'
             variant='outlined'
             margin='normal'
-            required
+            name='email'
+            onChange={(e) => handleInputChange(e)}
           />
+          <FormHelperText sx={{ color: 'red' }}>{validationErrors?.email}</FormHelperText>
           <TextField
             fullWidth
             id='password'
-            label='Password'
+            label='Password *'
             variant='outlined'
             type='password'
             margin='normal'
-            required
+            name='password'
+            onChange={(e) => handleInputChange(e)}
           />
+          <FormHelperText sx={{ color: 'red' }}>{validationErrors?.password}</FormHelperText>
           <Button
             type='submit'
             variant='contained'
@@ -70,7 +134,11 @@ const Login = () => {
             style={{ marginTop: '20px' }}
             onClick={handleLogin}
           >
-            Login
+            {loading ?
+              <CircularProgress color="inherit" sx={{ color: '#fff' }} />
+              :
+              'Login'
+            }
           </Button>
           <Typography variant='body2' align='center' mt={2} mb={3}>
             Don&apos;t have an account? <Link component={RouterLink} to='/register'>Register</Link>

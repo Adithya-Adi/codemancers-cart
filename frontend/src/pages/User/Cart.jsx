@@ -1,37 +1,40 @@
-import { useState } from 'react';
-import { Box, Typography, Button, IconButton } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Button,
+  IconButton,
+  Grid,
+  Divider,
+} from '@mui/material';
 import CartCard from '../../components/User/CartCard';
 import { useNavigate } from 'react-router-dom';
 import { ArrowBack } from '@mui/icons-material';
 import emptyCart from '../../assets/emptycart.jpg';
+import {
+  selectProducts,
+  addQuantity,
+  subQuantity,
+  removeProduct,
+} from '../../services/state/slices/cartSlice';
+import { useDispatch, useSelector } from "react-redux";
+import toast from 'react-hot-toast';
 
 const Cart = () => {
   const navigate = useNavigate();
-  const [cartItems, setCartItems] = useState([
-    { id: 1, name: `Men's Casual Shirt`, price: 299, quantity: 1, image: 'https://www.pngarts.com/files/3/Women-Jacket-PNG-High-Quality-Image.png' },
-    { id: 2, name: `Women's Running Shoes`, price: 499, quantity: 2, image: 'https://d3o2e4jr3mxnm3.cloudfront.net/Rocket-Vintage-Chill-Cap_66374_1_lg.png' },
-  ]);
+  const dispatch = useDispatch();
+  const cartItems = useSelector(selectProducts);
 
   const increaseQuantity = (id) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-      )
-    );
+    dispatch(addQuantity(id));
   };
 
   const decreaseQuantity = (id) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id && item.quantity > 1
-          ? { ...item, quantity: item.quantity - 1 }
-          : item
-      )
-    );
+    dispatch(subQuantity(id));
   };
 
   const removeItem = (id) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
+    dispatch(removeProduct(id));
+    toast.success('Item removed');
   };
 
   const getTotalAmount = () => {
@@ -39,11 +42,11 @@ const Cart = () => {
   };
 
   const handleCheckout = () => {
-    navigate('/checkout')
+    navigate('/checkout');
   };
 
   const handleBack = () => {
-    navigate(-1);
+    navigate('/home');
   };
 
   return (
@@ -51,9 +54,10 @@ const Cart = () => {
       <IconButton onClick={handleBack}>
         <ArrowBack />
       </IconButton>
-      <Typography variant='h4' mb={4}>
+      <Typography variant='h4' mb={2}>
         Your cart items
       </Typography>
+      <Divider sx={{ marginBottom: 4 }} />
       {cartItems.length === 0 ? (
         <Box textAlign='center'>
           <img src={emptyCart} alt='Empty Cart' style={{ marginBottom: '16px', maxWidth: '300px', width: '100%' }} />
@@ -61,15 +65,19 @@ const Cart = () => {
         </Box>
       ) : (
         <>
-          {cartItems.map((item) => (
-            <CartCard
-              key={item.id}
-              item={item}
-              increaseQuantity={increaseQuantity}
-              decreaseQuantity={decreaseQuantity}
-              removeItem={removeItem}
-            />
-          ))}
+          <Grid container spacing={2}>
+            {cartItems.map((item) => (
+              <Grid item xs={12} sm={6} md={4} key={item.productId}>
+                <CartCard
+                  item={item}
+                  increaseQuantity={increaseQuantity}
+                  decreaseQuantity={decreaseQuantity}
+                  removeItem={removeItem}
+                />
+              </Grid>
+            ))}
+          </Grid>
+          <Divider sx={{ marginTop: 4 }} />
           <Box display='flex' justifyContent='flex-end' mt={4}>
             <Typography variant='h6' mr={2}>
               Total Amount: ₹{getTotalAmount()}

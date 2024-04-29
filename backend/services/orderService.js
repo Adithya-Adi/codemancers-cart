@@ -4,8 +4,20 @@ const User = require('../models/User');
 const orderEventEmitter = require('../subscribers/orderSubscription');
 
 const createOrder = async (orderData) => {
-  const { userId, products, totalPrice } = orderData;
-  if (!userId || !products || products.length === 0 || !totalPrice) {
+  const { userId, products, totalPrice, billingDetails } = orderData;
+  console.log(orderData);
+  if (
+    !userId ||
+    !products ||
+    products.length === 0 ||
+    !totalPrice ||
+    !billingDetails.fullName ||
+    !billingDetails.email ||
+    !billingDetails.address ||
+    !billingDetails.city ||
+    !billingDetails.postalCode ||
+    !billingDetails.country
+  ) {
     throw new ApiError(404, 'Incomplete Product Data');
   }
   const user = await User.findById(userId);

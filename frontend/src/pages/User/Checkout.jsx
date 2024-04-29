@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from "react-redux";
 import {
   Container,
   Box,
@@ -11,18 +13,38 @@ import {
   IconButton
 } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
+import { OrderAPI } from '../../services/apis/orderAPI';
+import {
+  selectProducts,
+  clearCart,
+  selectTotalAmount
+} from '../../services/state/slices/cartSlice';
+import toast from 'react-hot-toast';
 
 const CheckoutPage = () => {
-  const navigate = useNavigate();
+  const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+
+  // states
   const [billingDetails, setBillingDetails] = useState({
-    fullName: "",
-    email: "",
+    fullName: loggedInUser.fullName,
+    email: loggedInUser.email,
     address: "",
     city: "",
     postalCode: "",
     country: "",
   });
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const cartItems = useSelector(selectProducts);
+  const totalAmout = useSelector(selectTotalAmount);
+  const shippingCharge = 50.0;
+
+  useEffect(() => {
+    if (cartItems.length === 0) {
+      navigate('/cart');
+    }
+  }, [cartItems, navigate])
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,18 +54,23 @@ const CheckoutPage = () => {
     }));
   };
 
-  const handlePlaceOrder = () => {
-    console.log(billingDetails);
+  const handlePlaceOrder = async (e) => {
+    e.preventDefault();
+    try {
+      const orderResponse = await OrderAPI.createOrder({
+        userId: loggedInUser._id,
+        products: cartItems,
+        totalPrice: totalAmout + shippingCharge,
+        billingDetails,
+      });
+      toast.success(orderResponse.message);
+      navigate('/home');
+      dispatch(clearCart());
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
   };
 
-  const shippingCharge = 10.0;
-  const totalItems = 3;
-
-  // Example cart items
-  const cartItems = [
-    { id: 1, name: `Men's Casual Shirt`, price: 29.99, quantity: 1 },
-    { id: 2, name: `Women's Running Shoes`, price: 49.99, quantity: 2 },
-  ];
 
   const handleBack = () => {
     navigate(-1);
@@ -119,14 +146,14 @@ const CheckoutPage = () => {
             <Box mt={2}>
               <Typography variant='body1' mt={'10px'}>
                 {cartItems.map((item) => (
-                  <Typography key={item.id} variant='body1'>{item.name} x {item.quantity}</Typography>
+                  <Typography key={item._id} variant='body1'>{item.title} x {item.quantity}</Typography>
                 ))}
               </Typography>
               <Divider />
               <Typography variant='body1' mt={2}>Shipping Charge: ₹{shippingCharge.toFixed(2)}</Typography>
 
               <Typography variant='h6' mt={'10px'}>
-                Total Amount: ₹{(totalItems + shippingCharge).toFixed(2)}
+                Total Amount: ₹{(totalAmout + shippingCharge).toFixed(2)}
               </Typography>
               <Button variant='contained' color='primary' onClick={handlePlaceOrder} style={{ marginTop: '20px', width: '100%' }}>
                 Place Order

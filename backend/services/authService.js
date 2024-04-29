@@ -43,6 +43,9 @@ const loginUser = async (userData) => {
   if (!checkPassword) {
     throw new ApiError(401, 'Incorrect Password');
   }
+  if (!user.isActive) {
+    throw new ApiError(401, 'Account is Deactivated');
+  }
   const token = generateToken(user._id);
   user.password = undefined;
   return {

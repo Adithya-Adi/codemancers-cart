@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import {
   Table,
   TableBody,
@@ -10,25 +11,45 @@ import {
   Box
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { ProductAPI } from '../../services/apis/productAPI';
+import toast from 'react-hot-toast';
 
 const ProductsView = () => {
   const navigate = useNavigate();
+  const [products, setProducts] = useState([]);
 
-  const dummyProducts = [
-    { id: 1, name: 'Product 1', description: 'Description of Product 1', price: 29.99, category: 'Category 1', image: 'https://www.pngarts.com/files/3/Women-Jacket-PNG-High-Quality-Image.png' },
-    { id: 2, name: 'Product 2', description: 'Description of Product 2', price: 39.99, category: 'Category 2', image: 'https://www.pngarts.com/files/3/Women-Jacket-PNG-High-Quality-Image.png' },
-    { id: 3, name: 'Product 3', description: 'Description of Product 3', price: 49.99, category: 'Category 3', image: 'https://www.pngarts.com/files/3/Women-Jacket-PNG-High-Quality-Image.png' },
-    { id: 4, name: 'Product 4', description: 'Description of Product 4', price: 59.99, category: 'Category 1', image: 'https://www.pngarts.com/files/3/Women-Jacket-PNG-High-Quality-Image.png' },
-    { id: 5, name: 'Product 5', description: 'Description of Product 5', price: 69.99, category: 'Category 2', image: 'https://www.pngarts.com/files/3/Women-Jacket-PNG-High-Quality-Image.png' },
-  ];
+  const getAllProducts = async () => {
+    try {
+      const allProducts = await ProductAPI.getAllProducts();
+      setProducts(allProducts.data);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+
+  useEffect(() => {
+    getAllProducts();
+  }, [])
 
   const handleEdit = (productId) => {
     navigate(`/admin/products/${productId}`);
   };
 
-  const handleDelete = (productId) => {
-    console.log(productId);
+  const handleDelete = async (productId) => {
+    const confirmed = window.confirm('Are you sure you want to delete this product?');
+    if (!confirmed) {
+      return;
+    }
+    try {
+      const deleteProductResponse = await ProductAPI.deleteProduct(productId);
+      const updatedProducts = products.filter(product => product._id !== productId);
+      setProducts(updatedProducts);
+      toast.success(deleteProductResponse.message);
+    } catch (error) {
+      toast.error(error.response.data.message)
+    }
   };
+
 
   const handleAddProduct = () => {
     navigate('/admin/products');
@@ -44,7 +65,7 @@ const ProductsView = () => {
           <TableHead>
             <TableRow>
               <TableCell>Image</TableCell>
-              <TableCell>Name</TableCell>
+              <TableCell>Title</TableCell>
               <TableCell>Description</TableCell>
               <TableCell>Price</TableCell>
               <TableCell>Category</TableCell>
@@ -52,18 +73,18 @@ const ProductsView = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {dummyProducts.map((product) => (
-              <TableRow key={product.id}>
+            {products?.map((product) => (
+              <TableRow key={product._id}>
                 <TableCell>
                   <img src={product.image} alt={product.name} style={{ width: 50, height: 50 }} />
                 </TableCell>
-                <TableCell>{product.name}</TableCell>
+                <TableCell>{product.title}</TableCell>
                 <TableCell>{product.description}</TableCell>
                 <TableCell>{product.price}</TableCell>
                 <TableCell>{product.category}</TableCell>
                 <TableCell>
-                  <Button variant='contained' color='primary' onClick={() => handleEdit(product.id)} sx={{ marginRight: 3 }}>Edit</Button>
-                  <Button variant='contained' color='error' onClick={() => handleDelete(product.id)}>Delete</Button>
+                  <Button variant='contained' color='primary' onClick={() => handleEdit(product._id)} sx={{ marginRight: 3, width: '100px' }}>Edit</Button>
+                  <Button variant='contained' color='error' onClick={() => handleDelete(product._id)} sx={{ width: '100px' }}>Delete</Button>
                 </TableCell>
               </TableRow>
             ))}

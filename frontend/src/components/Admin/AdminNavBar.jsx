@@ -12,8 +12,8 @@ import {
 } from '@mui/material';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
-import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 const AdminNavBar = () => {
@@ -24,6 +24,17 @@ const AdminNavBar = () => {
   const handleDrawerToggle = () => {
     setMenuOpen(!menuOpen);
   };
+
+  const handleLogout = () => {
+    const confirmed = window.confirm('Are you sure you want to log out?');
+    if (confirmed) {
+      localStorage.clear('loggedInAdmin');
+      localStorage.clear('admin_token');
+      navigate('/admin');
+      window.location.reload();
+    }
+  };
+
 
   return (
     <>
@@ -37,7 +48,7 @@ const AdminNavBar = () => {
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant='h6' noWrap onClick={() => navigate('/admin/dashboard')}>
+        <Typography variant='h6' noWrap onClick={() => navigate('/admin/products/view')}>
           <IconButton color='inherit'>Codemancers-Cart </IconButton>
         </Typography>
       </Box>
@@ -59,16 +70,16 @@ const AdminNavBar = () => {
         <List>
           <ListItem
             component={Link}
-            to='/admin/dashboard'
+            to='/admin/products/view'
             onClick={handleDrawerToggle}
             sx={{
-              backgroundColor: location.pathname === '/admin/dashboard' ? 'rgba(0, 0, 0, 0.08)' : 'transparent'
+              backgroundColor: location.pathname === '/admin/products/view' ? 'rgba(0, 0, 0, 0.08)' : 'transparent'
             }}
           >
             <ListItemIcon>
-              <DashboardIcon />
+              <ShoppingCartIcon />
             </ListItemIcon>
-            <ListItemText primary='Dashboard' />
+            <ListItemText primary='Products' />
           </ListItem>
           <ListItem
             component={Link}
@@ -83,18 +94,15 @@ const AdminNavBar = () => {
             </ListItemIcon>
             <ListItemText primary='Users' />
           </ListItem>
+
           <ListItem
+            onClick={handleLogout}
             component={Link}
-            to='/admin/products/view'
-            onClick={handleDrawerToggle}
-            sx={{
-              backgroundColor: location.pathname === '/admin/products/view' ? 'rgba(0, 0, 0, 0.08)' : 'transparent'
-            }}
           >
             <ListItemIcon>
-              <ShoppingCartIcon />
+              <ExitToAppIcon />
             </ListItemIcon>
-            <ListItemText primary='Products' />
+            <ListItemText primary='Logout' />
           </ListItem>
         </List>
       </Drawer>

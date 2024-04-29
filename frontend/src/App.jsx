@@ -8,7 +8,6 @@ const Cart = lazy(() => import('./pages/User/Cart'));
 const CheckoutPage = lazy(() => import('./pages/User/Checkout'));
 //admin pages
 const AdminLogin = lazy(() => import('./pages/Admin/AdminLogin'));
-const AdminDashboard = lazy(() => import('./pages/Admin/AdminDashboard'));
 const ProductsView = lazy(() => import('./pages/Admin/ProductsView'));
 const Products = lazy(() => import('./pages/Admin/Products'));
 const Users = lazy(() => import('./pages/Admin/Users'));
@@ -19,123 +18,120 @@ const AdminLayout = lazy(() => import('./layouts/AdminLayout'));
 import NotFoundPage from './pages/NotFoundPage';
 //loading component
 import Loading from './components/Common/Loading';
+// Toast
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        {/* user routes */}
-        <Route
-          path='/'
-          element={
-            <Suspense fallback={<Loading />}>
-              <Login />
-            </Suspense>
-          }
-        />
-        <Route
-          path='/register'
-          element={
-            <Suspense fallback={<Loading />}>
-              <Register />
-            </Suspense>
-          }
-        />
-        <Route
-          element={
-            <Suspense fallback={<Loading />}>
-              <UserLayout />
-            </Suspense>
-          }
-        >
+    <>
+      <Router>
+        <Routes>
+          {/* user routes */}
           <Route
-            path='/home'
+            path='/'
             element={
               <Suspense fallback={<Loading />}>
-                <Home />
+                <Login />
               </Suspense>
             }
           />
           <Route
-            path='/cart'
+            path='/register'
             element={
               <Suspense fallback={<Loading />}>
-                <Cart />
-              </Suspense>
-            }
-          />
-          <Route
-            path='/checkout'
-            element={
-              <Suspense fallback={<Loading />}>
-                <CheckoutPage />
-              </Suspense>
-            }
-          />
-        </Route>
-        {/* admin routes*/}
-        <Route path='/admin'>
-          <Route
-            index
-            element={
-              <Suspense fallback={<Loading />}>
-                <AdminLogin />
+                <Register />
               </Suspense>
             }
           />
           <Route
             element={
               <Suspense fallback={<Loading />}>
-                <AdminLayout />
+                <UserLayout />
               </Suspense>
             }
           >
             <Route
-              path='dashboard'
+              path='/home'
               element={
                 <Suspense fallback={<Loading />}>
-                  <AdminDashboard />
+                  <Home />
                 </Suspense>
               }
             />
             <Route
-              path='users'
+              path='/cart'
               element={
                 <Suspense fallback={<Loading />}>
-                  <Users />
+                  <Cart />
                 </Suspense>
               }
             />
             <Route
-              path='products/view'
+              path='/checkout'
               element={
                 <Suspense fallback={<Loading />}>
-                  <ProductsView />
-                </Suspense>
-              }
-            />
-            <Route
-              path='products'
-              element={
-                <Suspense fallback={<Loading />}>
-                  <Products />
-                </Suspense>
-              }
-            />
-            <Route
-              path='products/:id'
-              element={
-                <Suspense fallback={<Loading />}>
-                  <Products />
+                  <CheckoutPage />
                 </Suspense>
               }
             />
           </Route>
-        </Route>
-        {/* 404 not found */}
-        <Route path='*' element={<NotFoundPage />} />
-      </Routes>
-    </Router>
+          {/* admin routes*/}
+          <Route path='/admin'>
+            <Route
+              index
+              element={
+                <Suspense fallback={<Loading />}>
+                  <AdminLogin />
+                </Suspense>
+              }
+            />
+            <Route
+              element={
+                <Suspense fallback={<Loading />}>
+                  <AdminLayout />
+                </Suspense>
+              }
+            >
+              <Route
+                path='users'
+                element={
+                  <Suspense fallback={<Loading />}>
+                    <Users />
+                  </Suspense>
+                }
+              />
+              <Route
+                path='products/view'
+                element={
+                  <Suspense fallback={<Loading />}>
+                    <ProductsView />
+                  </Suspense>
+                }
+              />
+              <Route
+                path='products'
+                element={
+                  <Suspense fallback={<Loading />}>
+                    <Products />
+                  </Suspense>
+                }
+              />
+              <Route
+                path='products/:id'
+                element={
+                  <Suspense fallback={<Loading />}>
+                    <Products />
+                  </Suspense>
+                }
+              />
+            </Route>
+          </Route>
+          {/* 404 not found */}
+          <Route path='*' element={<NotFoundPage />} />
+        </Routes>
+      </Router>
+      <Toaster position="top-center" reverseOrder={false} />
+    </>
   );
 }
 

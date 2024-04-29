@@ -1,53 +1,65 @@
 import {
-  Box,
-  Typography,
-  Grid,
   Card,
-  CardMedia,
   CardContent,
-  CardActions,
+  CardMedia,
+  Typography,
   IconButton,
   Button,
-  Divider,
+  Box,
 } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { Remove as RemoveIcon, Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 
+const StyledCard = styled(Card)(() => ({
+  display: 'flex',
+  flexDirection: 'row',
+  height: '100%',
+  justifyContent: 'space-between',
+}));
+
+const StyledCardContent = styled(CardContent)(() => ({
+  flex: '1 1 auto',
+  padding: 2
+}));
+
 const CartCard = ({ item, increaseQuantity, decreaseQuantity, removeItem }) => {
+  const { title, price, image, quantity } = item;
+
   return (
-    <Card variant='outlined'>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={4}>
-          <CardMedia
-            component='img'
-            image={item.image}
-            alt={item.name}
-            style={{ width: '100%', height: 'auto', borderRadius: '8px' }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={8}>
-          <CardContent>
-            <Typography variant='h6' gutterBottom>{item.name}</Typography>
-            <Typography variant='body2' color='textSecondary'>Price: ₹{item.price}</Typography>
-            <Typography variant='body2' color='textSecondary'>Quantity:</Typography>
-            <Box display='flex' alignItems='center'>
-              <IconButton onClick={() => decreaseQuantity(item.id)}>
-                <RemoveIcon />
-              </IconButton>
-              <Typography variant='body1' style={{ margin: '0 8px' }}>{item.quantity}</Typography>
-              <IconButton onClick={() => increaseQuantity(item.id)}>
-                <AddIcon />
-              </IconButton>
-            </Box>
-          </CardContent>
-          <Divider />
-          <CardActions>
-            <Button size='small' color='error' onClick={() => removeItem(item.id)}>
-              <DeleteIcon /> Remove
-            </Button>
-          </CardActions>
-        </Grid>
-      </Grid>
-    </Card>
+    <StyledCard>
+      <CardMedia
+        component="img"
+        image={image}
+        alt={title}
+        sx={{ width: 150, objectFit: 'cover', flexShrink: 0 }}
+      />
+      <StyledCardContent>
+        <Typography variant="h6" component="h2" gutterBottom>
+          {title}
+        </Typography>
+        <Typography variant="body2" color="textSecondary">
+          Price: ₹{price}
+        </Typography>
+        <Box display="flex" alignItems="center" mt={1}>
+          <IconButton onClick={() => decreaseQuantity(item.productId)}>
+            <RemoveIcon />
+          </IconButton>
+          <Typography variant="body1">{quantity}</Typography>
+          <IconButton onClick={() => increaseQuantity(item.productId)}>
+            <AddIcon />
+          </IconButton>
+        </Box>
+        <Button
+          variant="contained"
+          color="error"
+          startIcon={<DeleteIcon />}
+          onClick={() => removeItem(item.productId)}
+          sx={{ mt: 1 }}
+        >
+          Remove
+        </Button>
+      </StyledCardContent>
+    </StyledCard>
   );
 };
 

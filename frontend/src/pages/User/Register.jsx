@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import {
   Box,
   Link,
@@ -7,16 +8,91 @@ import {
   Typography,
   TextField,
   Button,
+  FormHelperText,
+  CircularProgress,
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import GoogleIcon from '@mui/icons-material/Google';
+import {
+  validateEmail,
+  validateName,
+  validatePhoneNumber,
+  validatePassword,
+  validateConfirmPassword,
+} from '../../utils/validation';
+import { AuthAPI } from '../../services/apis/authAPI';
+import toast from 'react-hot-toast';
 
 const Register = () => {
+  // states
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    phoneNumber: '',
+    password: '',
+    cpassword: '',
+  });
+  const [validationErrors, setValidationErrors] = useState({
+    fullName: '',
+    email: '',
+    phoneNumber: '',
+    password: '',
+    cpassword: '',
+  });
+
   const navigate = useNavigate();
 
-  const handleRegister = () => {
-    navigate('/login'); 
+  // useeffects
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem('loggedInUser');
+    const token = localStorage.getItem('token');
+    if (loggedInUser && token) {
+      navigate('/home');
+    }
+  }, [navigate])
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  }
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    const emailErrors = validateEmail(formData.email);
+    const fullNameErrors = validateName(formData.fullName);
+    const phoneNumberErrors = validatePhoneNumber(formData.phoneNumber);
+    const passwordErrors = validatePassword(formData.password);
+    const cpasswordErrors = validateConfirmPassword(formData.password, formData.cpassword);
+    const errors = {
+      ...fullNameErrors,
+      ...emailErrors,
+      ...phoneNumberErrors,
+      ...passwordErrors,
+      ...cpasswordErrors,
+    };
+    setValidationErrors(errors);
+    const hasErrors = Object.values(errors).some((error) => !!error);
+    if (hasErrors) {
+      return;
+    }
+    try {
+      const registerResponse = await AuthAPI.userRegister(formData);
+      toast.success(registerResponse.message);
+      setTimeout(() => {
+        navigate('/');
+      }, 1000);
+    } catch (error) {
+      toast.error(error.response.data.message)
+    } finally {
+      setLoading(false);
+    }
+
   };
 
   return (
@@ -42,41 +118,64 @@ const Register = () => {
         <Typography variant='h2' align='center' gutterBottom>
           Register
         </Typography>
-        <form style={{ width: '100%' }}>
+        <form style={{ width: '100%' }} method='post'>
           <TextField
             fullWidth
-            id='name'
-            label='Name'
+            id='fullName'
+            name='fullName'
+            label='Full Name'
             variant='outlined'
             margin='normal'
-            required
+            onChange={(e) => handleInputChange(e)}
           />
+          <FormHelperText sx={{ color: 'red' }}>{validationErrors?.fullName}</FormHelperText>
+
           <TextField
             fullWidth
             id='email'
+            name='email'
             label='Email'
             variant='outlined'
             margin='normal'
-            required
+            onChange={(e) => handleInputChange(e)}
           />
+          <FormHelperText sx={{ color: 'red' }}>{validationErrors?.email}</FormHelperText>
+
+          <TextField
+            fullWidth
+            id='phoneNumber'
+            name='phoneNumber'
+            label='Phone Number'
+            variant='outlined'
+            margin='normal'
+            onChange={(e) => handleInputChange(e)}
+          />
+          <FormHelperText sx={{ color: 'red' }}>{validationErrors?.phoneNumber}</FormHelperText>
+
           <TextField
             fullWidth
             id='password'
+            name='password'
             label='Password'
             variant='outlined'
             type='password'
             margin='normal'
-            required
+            onChange={(e) => handleInputChange(e)}
           />
+          <FormHelperText sx={{ color: 'red' }}>{validationErrors?.password}</FormHelperText>
+
           <TextField
             fullWidth
             id='cpassword'
+            name='cpassword'
             label='Confirm Password'
             variant='outlined'
             type='password'
             margin='normal'
-            required
+            onChange={(e) => handleInputChange(e)}
           />
+          <FormHelperText sx={{ color: 'red' }}>{validationErrors?.cpassword}</FormHelperText>
+
           <Button
             type='submit'
             variant='contained'
@@ -85,7 +184,11 @@ const Register = () => {
             style={{ marginTop: '20px' }}
             onClick={handleRegister}
           >
-            Register
+            {loading ?
+              <CircularProgress color="inherit" sx={{ color: '#fff' }} />
+              :
+              'Login'
+            }
           </Button>
           <Typography variant='body2' align='center' mt={2} mb={3}>
             Already have an account?{' '}
