@@ -49,7 +49,7 @@ const deleteProductController = async (req, res, next) => {
   };
 };
 
-const getAllProductsController = async (req, res, next) => {
+const getAllProductsController = async (_req, res, next) => {
   try {
     const getAllProductsResponse = await getAllProducts();
     res.status(getAllProductsResponse.status).json({

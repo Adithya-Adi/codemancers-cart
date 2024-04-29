@@ -17,7 +17,7 @@ const createOrderController = async (req, res, next) => {
   }
 };
 
-const getAllOrdersController = async (req, res, next) => {
+const getAllOrdersController = async (_req, res, next) => {
   try {
     const getAllOrdersResponse = await getAllOrders();
     res.status(getAllOrdersResponse.status).json({
