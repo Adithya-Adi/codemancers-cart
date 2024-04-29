@@ -19,14 +19,14 @@ describe('Order API Tests', () => {
 
   beforeEach(() => {
     testOrder = {
-      userId: '662f140ed4080f94a4bb1ef9',
+      userId: '662fcaf7138812332371f2ab',
       products: [
         {
-          productId: '614cb0e156b7d31cd8b5533d',
+          productId: '662f6d23bdfe9aafb0664c3c',
           quantity: 2,
         },
         {
-          productId: '614cb0e156b7d31cd8b5533e',
+          productId: '662fa1474849003e11d0c4db',
           quantity: 1,
         },
       ],

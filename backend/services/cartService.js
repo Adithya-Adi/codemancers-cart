@@ -2,9 +2,6 @@ const Cart = require('../models/Cart');
 const { ApiError } = require('../utils/helpers');
 
 const addToCart = async (userId, productId) => {
-  if (!userId || !productId) {
-    throw new ApiError(404, 'Incomplete Cart Data');
-  }
   let cart = await Cart.findOne({ userId });
   if (cart) {
     cart.products.push({
@@ -27,9 +24,6 @@ const addToCart = async (userId, productId) => {
 };
 
 const removeItemFromCart = async (userId, productId) => {
-  if (!userId || !productId) {
-    throw new ApiError(400, 'User ID and Product ID are required');
-  }
   const cart = await Cart.findOne({ userId });
   if (!cart) {
     throw new ApiError(404, 'Cart not found');
