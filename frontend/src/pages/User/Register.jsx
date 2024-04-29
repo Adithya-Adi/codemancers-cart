@@ -224,7 +224,7 @@ const Register = () => {
             {loading ?
               <CircularProgress color="inherit" sx={{ color: '#fff' }} />
               :
-              'Login'
+              'Register'
             }
           </Button>
           <Typography variant='body2' align='center' mt={2} mb={3}>
@@ -239,7 +239,7 @@ const Register = () => {
             Or register with
           </Typography>
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-              <div id="googlesignin" className="mx-auto"></div>
+            <div id="googlesignin" className="mx-auto"></div>
           </Box>
         </form>
       </Box>
