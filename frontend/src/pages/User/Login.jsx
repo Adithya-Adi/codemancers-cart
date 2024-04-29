@@ -61,6 +61,7 @@ const Login = () => {
   // Google sign in
   const googleUserVerifyHandler = async ({ credential }) => {
     try {
+      setLoading(true);
       const loginResponse = await AuthAPI.googleLogin(credential);
       localStorage.setItem('token', loginResponse.token);
       localStorage.setItem('loggedInUser', JSON.stringify(loginResponse.data));
