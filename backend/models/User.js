@@ -15,13 +15,11 @@ const userSchema = mongoose.Schema(
     },
     phoneNumber: {
       type: String,
-      required: true,
       unique: true,
       trim: true,
     },
     password: {
       type: String,
-      required: true,
     },
     isActive: {
       type: Boolean,

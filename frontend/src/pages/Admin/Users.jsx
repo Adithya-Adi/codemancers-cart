@@ -39,10 +39,10 @@ const Users = () => {
         </TableHead>
         <TableBody>
           {users.map((user) => (
-            <TableRow key={user.id}>
+            <TableRow key={user._id}>
               <TableCell>{user.fullName}</TableCell>
               <TableCell>{user.email}</TableCell>
-              <TableCell>{user.phoneNumber}</TableCell>
+              <TableCell>{user.phoneNumber || 'N/A'}</TableCell>
             </TableRow>
           ))}
         </TableBody>

@@ -92,18 +92,15 @@ const ProductsForm = ({ productId }) => {
     };
     setValidationErrors(errors);
     const hasErrors = Object.values(errors).some((error) => !!error);
-    if (hasErrors) {
-      return false;
-    }
-    return true;
+    return hasErrors;
   }
 
   const handleProductSubmit = async (e, action) => {
     e.preventDefault();
-    setLoading(true);
-    if (!handleValidate()) {
+    if (handleValidate()) {
       return;
     }
+    setLoading(true);
     try {
       if (formData.image instanceof File) {
         const imageBase64 = await convertToBase64(formData.image);

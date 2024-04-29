@@ -13,7 +13,6 @@ import {
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import GoogleIcon from '@mui/icons-material/Google';
 import {
   validateEmail,
   validateName,
@@ -53,6 +52,43 @@ const Register = () => {
     }
   }, [navigate])
 
+  useEffect(() => {
+    if (window.google && window.google.accounts) {
+      const googleAccounts = window.google.accounts;
+      googleAccounts.id.initialize({
+        client_id: import.meta.env.VITE_GOOGLE_OAUTH_ID,
+        callback: googleUserVerifyHandler,
+      });
+
+      googleAccounts.id.renderButton(document.getElementById("googlesignin"), {
+        ux_mode: "popup",
+        size: "large",
+      });
+    } else {
+      console.error("Google Accounts API is not available.");
+    }
+  }, []);
+
+  // Google sign in
+  const googleUserVerifyHandler = async ({ credential }) => {
+    try {
+      const loginResponse = await AuthAPI.googleLogin(credential);
+      localStorage.setItem('token', loginResponse.token);
+      localStorage.setItem('loggedInUser', JSON.stringify(loginResponse.data));
+      toast.success(loginResponse.message)
+      setTimeout(() => {
+        navigate('/home');
+        toast(`Hello ${loginResponse.data.email}!`, {
+          icon: '👋',
+        });
+      }, 1000);
+    } catch (error) {
+      toast.error(error.response.data.message)
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
@@ -63,7 +99,6 @@ const Register = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    setLoading(true);
     const emailErrors = validateEmail(formData.email);
     const fullNameErrors = validateName(formData.fullName);
     const phoneNumberErrors = validatePhoneNumber(formData.phoneNumber);
@@ -81,6 +116,7 @@ const Register = () => {
     if (hasErrors) {
       return;
     }
+    setLoading(true);
     try {
       const registerResponse = await AuthAPI.userRegister(formData);
       toast.success(registerResponse.message);
@@ -203,7 +239,7 @@ const Register = () => {
           </Typography>
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
             <IconButton>
-              <GoogleIcon />
+              <div id="googlesignin" className="mx-auto"></div>
             </IconButton>
           </Box>
         </form>

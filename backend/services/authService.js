@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const {
   ApiError,
@@ -56,6 +57,30 @@ const loginUser = async (userData) => {
   };
 };
 
+const googleLogin = async (credential) => {
+  const { name, email } = jwt.decode(credential);
+  const user = await User.findOneAndUpdate(
+    { email },
+    {
+      $setOnInsert: {
+        email,
+        fullName: name,
+      },
+    },
+    {
+      new: true,
+      upsert: true,
+    },
+  );
+  const token = generateToken(user._id);
+  return {
+    status: 200,
+    message: 'Login Successful',
+    data: user,
+    token,
+  };
+};
+
 const adminLogin = async (adminData) => {
   const { email, password } = adminData;
   if (!email || !password) {
@@ -83,4 +108,5 @@ module.exports = {
   registerUser,
   loginUser,
   adminLogin,
+  googleLogin,
 };

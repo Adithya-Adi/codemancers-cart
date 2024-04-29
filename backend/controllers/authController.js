@@ -1,6 +1,7 @@
 const {
   registerUser,
   loginUser,
+  googleLogin,
   adminLogin,
 } = require('../services/authService');
 
@@ -12,6 +13,21 @@ const registerUserController = async (req, res, next) => {
       success: true,
       message: registerUserResponse.message,
       data: registerUserResponse.data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const googleLoginController = async (req, res, next) => {
+  try {
+    const { credential } = req.body;
+    const googleLoginResponse = await googleLogin(credential);
+    res.status(googleLoginResponse.status).json({
+      success: true,
+      message: googleLoginResponse.message,
+      data: googleLoginResponse.data,
+      token: googleLoginResponse.token,
     });
   } catch (error) {
     next(error);
@@ -51,5 +67,6 @@ const adminLoginController = async (req, res, next) => {
 module.exports = {
   registerUserController,
   loginUserController,
+  googleLoginController,
   adminLoginController,
 };

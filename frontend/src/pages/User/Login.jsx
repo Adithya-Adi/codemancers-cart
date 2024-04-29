@@ -11,7 +11,6 @@ import {
   FormHelperText,
   CircularProgress,
 } from '@mui/material';
-import GoogleIcon from '@mui/icons-material/Google';
 import { Link as RouterLink } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { validateEmail, validatePassword } from '../../utils/validation';
@@ -41,6 +40,43 @@ const Login = () => {
     }
   }, [navigate])
 
+  useEffect(() => {
+    if (window.google && window.google.accounts) {
+      const googleAccounts = window.google.accounts;
+      googleAccounts.id.initialize({
+        client_id: import.meta.env.VITE_GOOGLE_OAUTH_ID,
+        callback: googleUserVerifyHandler,
+      });
+
+      googleAccounts.id.renderButton(document.getElementById("googlesignin"), {
+        ux_mode: "popup",
+        size: "large",
+      });
+    } else {
+      console.error("Google Accounts API is not available.");
+    }
+  }, []);
+
+  // Google sign in
+  const googleUserVerifyHandler = async ({ credential }) => {
+    try {
+      const loginResponse = await AuthAPI.googleLogin(credential);
+      localStorage.setItem('token', loginResponse.token);
+      localStorage.setItem('loggedInUser', JSON.stringify(loginResponse.data));
+      toast.success(loginResponse.message)
+      setTimeout(() => {
+        navigate('/home');
+        toast(`Hello ${loginResponse.data.email}!`, {
+          icon: '👋',
+        });
+      }, 1000);
+    } catch (error) {
+      toast.error(error.response.data.message)
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
@@ -51,7 +87,6 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLoading(true);
     const emailErrors = validateEmail(formData.email);
     const passwordErrors = validatePassword(formData.password);
     const errors = {
@@ -63,6 +98,7 @@ const Login = () => {
     if (hasErrors) {
       return;
     }
+    setLoading(true);
     try {
       const loginResponse = await AuthAPI.userLogin(formData);
       localStorage.setItem('token', loginResponse.token);
@@ -150,7 +186,7 @@ const Login = () => {
           </Typography>
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
             <IconButton>
-              <GoogleIcon />
+              <div id="googlesignin" className="mx-auto"></div>
             </IconButton>
           </Box>
         </form>

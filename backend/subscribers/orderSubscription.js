@@ -12,7 +12,6 @@ orderEventEmitter.on('orderCreated', async (orderData) => {
         <p>Thank you for your order!</p>
         <p><strong>Order ID:</strong> ${_id}</p>
         <p><strong>Total Price:</strong> ${totalPrice}</p>
-        <p><strong>Products:</strong></p>
         <p>For any questions or concerns, please contact us.</p>
         <p>Thank you,<br/>Codemancer-Cart</p>
       </body>
