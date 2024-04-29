@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const cloudinary = require('../config/cloudinaryConfig');
 
 class ApiError extends Error {
   constructor (statusCode, message = 'Internal Server Error') {
@@ -9,11 +10,17 @@ class ApiError extends Error {
   }
 }
 
-const generateToken = (userId) => {
-  return jwt.sign({ userId }, process.env.JWT_SECRET);
+const generateToken = (userId, role = 'user') => {
+  return jwt.sign({ userId, role }, process.env.JWT_SECRET);
+};
+
+const uploadImageToCloudinary = async (image) => {
+  const cloudinaryResponse = await cloudinary.uploader.upload(image);
+  return cloudinaryResponse.secure_url;
 };
 
 module.exports = {
   ApiError,
   generateToken,
+  uploadImageToCloudinary,
 };

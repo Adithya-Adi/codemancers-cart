@@ -19,8 +19,10 @@ const registerUser = async (userData) => {
   const user = new User({
     ...userData,
     password: hashedPassword,
+    isAdmin: false,
   });
   await user.save();
+  user.password = undefined;
   return {
     status: 201,
     message: 'User Created',
@@ -42,6 +44,30 @@ const loginUser = async (userData) => {
     throw new ApiError(401, 'Incorrect Password');
   }
   const token = generateToken(user._id);
+  user.password = undefined;
+  return {
+    status: 200,
+    message: 'Login Successful',
+    data: user,
+    token,
+  };
+};
+
+const adminLogin = async (adminData) => {
+  const { email, password } = adminData;
+  if (!email || !password) {
+    throw new ApiError(404, 'Incomplete User Data');
+  }
+  const user = await User.findOne({ email, isAdmin: true });
+  if (!user) {
+    throw new ApiError(401, 'Invalid Credentials');
+  }
+  const checkPassword = await bcrypt.compare(password, user.password);
+  if (!checkPassword) {
+    throw new ApiError(401, 'Incorrect Password');
+  }
+  const token = generateToken(user._id, 'admin');
+  user.password = undefined;
   return {
     status: 200,
     message: 'Login Successful',
@@ -53,4 +79,5 @@ const loginUser = async (userData) => {
 module.exports = {
   registerUser,
   loginUser,
+  adminLogin,
 };
