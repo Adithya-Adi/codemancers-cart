@@ -1,10 +1,10 @@
 import { Typography, Box, IconButton } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
-import { useNavigate, useParams } from 'react-router-dom';
+import { NavigateFunction, useNavigate, useParams } from 'react-router-dom';
 import ProductsForm from '../../components/Admin/ProductsForm';
 
-const Products = () => {
-  const navigate = useNavigate();
+const Products: React.FC = () => {
+  const navigate: NavigateFunction = useNavigate();
   const { id } = useParams();
 
   const handleBack = () => {

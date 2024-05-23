@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
 import {
   Container,
   Box,
@@ -24,17 +24,19 @@ import {
   validateCity,
   validateCountry,
   validateEmail,
+  ErrorType,
 } from '../../utils/validation';
+import { ICartDetailsModel, IProductInCartModel, IResponse } from '../../utils/helpers';
 
 const CheckoutPage = () => {
-  const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+  const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
 
   // states
-  const [loading, setLoading] = useState(false);
-  const [initalLoading, setInitalLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [initalLoading, setInitalLoading] = useState<boolean>(false);
 
-  const [cartDetails, setCartDetails] = useState([]);
-  const [billingDetails, setBillingDetails] = useState({
+  const [cartDetails, setCartDetails] = useState<ICartDetailsModel | undefined>(undefined);
+  const [billingDetails, setBillingDetails] = useState<IBillingDetailsModel>({
     fullName: loggedInUser.fullName,
     email: loggedInUser.email,
     address: "",
@@ -43,7 +45,7 @@ const CheckoutPage = () => {
     country: "",
   });
 
-  const [validationErrors, setValidationErrors] = useState({
+  const [validationErrors, setValidationErrors] = useState<IBillingDetailsModel>({
     fullName: "",
     email: "",
     address: "",
@@ -52,19 +54,19 @@ const CheckoutPage = () => {
     country: "",
   });
 
-  const navigate = useNavigate();
-  const shippingCharge = 50.0;
+  const navigate: NavigateFunction = useNavigate();
+  const shippingCharge: number = 50.0;
 
   useEffect(() => {
-    const getCartDetails = async () => {
+    const getCartDetails = async (): Promise<void> => {
       try {
         setInitalLoading(true);
-        const getCartDetailsResponse = await CartAPI.getUserCart(loggedInUser._id);
+        const getCartDetailsResponse: IResponse = await CartAPI.getUserCart(loggedInUser._id);
         setCartDetails(getCartDetailsResponse.data);
         if (getCartDetailsResponse.data.products.length === 0) {
           navigate('/cart');
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error:', error.message);
       } finally {
         setInitalLoading(false);
@@ -73,7 +75,7 @@ const CheckoutPage = () => {
     getCartDetails();
   }, [loggedInUser._id, navigate]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
     setBillingDetails((prevDetails) => ({
       ...prevDetails,
@@ -81,15 +83,15 @@ const CheckoutPage = () => {
     }));
   };
 
-  const handlePlaceOrder = async (e) => {
+  const handlePlaceOrder = async (e: React.MouseEvent<HTMLElement>) : Promise<void> => {
     e.preventDefault();
-    const fullNameErrors = validateName(billingDetails.fullName);
-    const emailErrors = validateEmail(billingDetails.email);
-    const addressErrors = validateAddress(billingDetails.address);
-    const cityErrors = validateCity(billingDetails.city);
-    const postalCodeErrors = validatePostalCode(billingDetails.postalCode);
-    const countryErrors = validateCountry(billingDetails.country);
-    const errors = {
+    const fullNameErrors : ErrorType = validateName(billingDetails.fullName);
+    const emailErrors : ErrorType = validateEmail(billingDetails.email);
+    const addressErrors : ErrorType = validateAddress(billingDetails.address);
+    const cityErrors : ErrorType = validateCity(billingDetails.city);
+    const postalCodeErrors: ErrorType = validatePostalCode(billingDetails.postalCode);
+    const countryErrors: ErrorType = validateCountry(billingDetails.country);
+    const errors: IBillingDetailsModel = {
       ...fullNameErrors,
       ...emailErrors,
       ...addressErrors,
@@ -104,24 +106,23 @@ const CheckoutPage = () => {
     }
     setLoading(true);
     try {
-      const orderResponse = await OrderAPI.createOrder({
+      const orderResponse: IResponse = await OrderAPI.createOrder({
         userId: loggedInUser._id,
-        products: cartDetails.products,
-        totalPrice: cartDetails.totalPrice + shippingCharge,
+        products: cartDetails?.products,
+        totalPrice: cartDetails?.totalPrice || 0 + shippingCharge,
         billingDetails,
       });
       toast.success(orderResponse.message);
       await CartAPI.clearUserCart(loggedInUser._id);
       navigate('/home');
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.response.data.message);
     } finally {
       setLoading(false);
     }
   };
 
-
-  const handleBack = () => {
+  const handleBack = () : void => {
     navigate(-1);
   };
 
@@ -206,7 +207,7 @@ const CheckoutPage = () => {
                 <Divider />
                 <Box mt={2}>
                   <Typography variant='body1' mt={'10px'}>
-                    {cartDetails?.products?.map((item) => (
+                    {cartDetails?.products?.map((item: IProductInCartModel) => (
                       <Typography key={item.productId} variant='body1'>{item.title} x {item.quantity}</Typography>
                     ))}
                   </Typography>
@@ -214,7 +215,7 @@ const CheckoutPage = () => {
                   <Typography variant='body1' mt={2}>Shipping Charge: ₹{shippingCharge.toFixed(2)}</Typography>
 
                   <Typography variant='h6' mt={'10px'}>
-                    Total Amount: ₹{(cartDetails?.totalPrice + shippingCharge).toFixed(2)}
+                    Total Amount: ₹{(cartDetails?.totalPrice || 0 + shippingCharge).toFixed(2)}
                   </Typography>
                   <Button variant='contained' color='primary' onClick={handlePlaceOrder} style={{ marginTop: '20px', width: '100%' }}>
 
@@ -235,3 +236,14 @@ const CheckoutPage = () => {
 };
 
 export default CheckoutPage;
+
+export interface IBillingDetailsModel {
+    [key: string] : string,
+}
+
+export interface IOrderDataModel {
+  userId: string,
+  products: IProductInCartModel | undefined,
+  totalPrice: number,
+  billingDetails: IBillingDetailsModel,
+}

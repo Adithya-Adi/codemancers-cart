@@ -1,3 +1,4 @@
+import { IOrderDataModel } from '../../pages/User/Checkout';
 import axiosInstance from './configs/axiosConfig';
 
 const API_ROUTES = {
@@ -6,7 +7,7 @@ const API_ROUTES = {
 };
 
 export const OrderAPI = {
-  createOrder: async (orderData) => {
+  createOrder: async (orderData: IOrderDataModel) => {
     const response = await axiosInstance.post(
       API_ROUTES.CREATE_ORDER,
       orderData

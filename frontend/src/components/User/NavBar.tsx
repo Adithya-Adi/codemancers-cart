@@ -6,16 +6,16 @@ import {
   Button
 } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp'; // Import the ExitToAppIcon
-import { useNavigate } from 'react-router-dom';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import { useNavigate, NavigateFunction } from 'react-router-dom';
 
-const NavBar = () => {
-  const navigate = useNavigate();
+const NavBar : React.FC = () => {
+  const navigate: NavigateFunction = useNavigate();
   const handleLogout = () => {
     const confirmed = window.confirm('Are you sure you want to log out?');
     if (confirmed) {
-      localStorage.clear('loggedInUser');
-      localStorage.clear('token');
+      localStorage.removeItem('loggedInUser');
+      localStorage.removeItem('token');
       navigate('/');
     }
   };

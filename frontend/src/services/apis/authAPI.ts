@@ -1,3 +1,5 @@
+import { ILoginModel } from '../../pages/User/Login';
+import { IRegisterModel } from '../../pages/User/Register';
 import axiosInstance from './configs/axiosConfig';
 
 const API_ROUTES = {
@@ -8,28 +10,28 @@ const API_ROUTES = {
 };
 
 export const AuthAPI = {
-  userRegister: async (userData) => {
+  userRegister: async (userData: IRegisterModel) => {
     const response = await axiosInstance.post(
       API_ROUTES.USER_REGISTER,
       userData
     );
     return response.data;
   },
-  userLogin: async (userData) => {
+  userLogin: async (userData: ILoginModel) => {
     const response = await axiosInstance.post(
       API_ROUTES.USER_LOGIN,
       userData
     );
     return response.data;
   },
-  googleLogin: async (credential) => {
+  googleLogin: async (credential: string) => {
     const response = await axiosInstance.post(
       API_ROUTES.GOOGLE_LOGIN,
       { credential }
     );
     return response.data;
   },
-  adminLogin: async (adminData) => {
+  adminLogin: async (adminData: ILoginModel) => {
     const response = await axiosInstance.post(
       API_ROUTES.ADMIN_LOGIN,
       adminData,

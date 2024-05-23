@@ -8,34 +8,37 @@ import {
   FormHelperText,
   CircularProgress,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { validateEmail, validatePassword } from '../../utils/validation';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
+import { ErrorType, validateEmail, validatePassword } from '../../utils/validation';
 import { AuthAPI } from '../../services/apis/authAPI';
 import toast from 'react-hot-toast';
+import { ILoginModel } from '../User/Login';
+import { IValidationModel } from '../../components/Admin/ProductsForm';
+import { IResponse } from '../../utils/helpers';
 
-const AdminLogin = () => {
+const AdminLogin: React.FC = () => {
   //states
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ILoginModel>({
     email: '',
     password: '',
   });
-  const [validationErrors, setValidationErrors] = useState({
+  const [validationErrors, setValidationErrors] = useState<IValidationModel>({
     email: '',
     password: '',
   });
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState<boolean>(false);
+  const navigate: NavigateFunction = useNavigate();
 
   // useeffects
   useEffect(() => {
-    const loggedInUser = localStorage.getItem('loggedInAdmin');
-    const token = localStorage.getItem('admin_token');
+    const loggedInUser: string | null = localStorage.getItem('loggedInAdmin');
+    const token: string | null = localStorage.getItem('admin_token');
     if (loggedInUser && token) {
       navigate('/admin/products/view');
     }
   }, [navigate])
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -43,22 +46,22 @@ const AdminLogin = () => {
     }));
   }
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
-    const emailErrors = validateEmail(formData.email);
-    const passwordErrors = validatePassword(formData.password);
-    const errors = {
+    const emailErrors: ErrorType = validateEmail(formData.email);
+    const passwordErrors: ErrorType = validatePassword(formData.password);
+    const errors: any = {
       ...emailErrors,
       ...passwordErrors,
     };
     setValidationErrors(errors);
-    const hasErrors = Object.values(errors).some((error) => !!error);
+    const hasErrors: boolean = Object.values(errors).some((error) => !!error);
     if (hasErrors) {
       return;
     }
     setLoading(true);
     try {
-      const loginResponse = await AuthAPI.adminLogin(formData);
+      const loginResponse: IResponse = await AuthAPI.adminLogin(formData);
       localStorage.setItem('admin_token', loginResponse.token);
       localStorage.setItem('loggedInAdmin', JSON.stringify(loginResponse.data));
       toast.success('Login Successfull')
@@ -68,7 +71,7 @@ const AdminLogin = () => {
           icon: '👋',
         });
       }, 1000);
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.response.data.message)
     } finally {
       setLoading(false);
@@ -106,7 +109,7 @@ const AdminLogin = () => {
             variant='outlined'
             margin='normal'
             name='email'
-            onChange={(e) => handleInputChange(e)}
+            onChange={handleInputChange}
           />
           <FormHelperText sx={{ color: 'red' }}>{validationErrors?.email}</FormHelperText>
           <TextField
@@ -117,7 +120,7 @@ const AdminLogin = () => {
             type='password'
             margin='normal'
             name='password'
-            onChange={(e) => handleInputChange(e)}
+            onChange={handleInputChange}
           />
           <FormHelperText sx={{ color: 'red' }}>{validationErrors?.password}</FormHelperText>
           <Button

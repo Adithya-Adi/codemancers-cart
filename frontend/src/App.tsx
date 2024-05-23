@@ -1,20 +1,20 @@
-import { lazy, Suspense } from 'react';
+import React, { lazy, Suspense, LazyExoticComponent } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 //user pages
-const Login = lazy(() => import('./pages/User/Login'));
-const Register = lazy(() => import('./pages/User/Register'));
-const Home = lazy(() => import('./pages/User/Home'));
-const Cart = lazy(() => import('./pages/User/Cart'));
-const CheckoutPage = lazy(() => import('./pages/User/Checkout'));
+const Login: LazyExoticComponent<React.ComponentType<{}>> = lazy(() => import('./pages/User/Login'));
+const Register: LazyExoticComponent<React.ComponentType<{}>> = lazy(() => import('./pages/User/Register'));
+const Home: LazyExoticComponent<React.ComponentType<{}>> = lazy(() => import('./pages/User/Home'));
+const Cart: LazyExoticComponent<React.ComponentType<{}>> = lazy(() => import('./pages/User/Cart'));
+const CheckoutPage: LazyExoticComponent<React.ComponentType<{}>>  = lazy(() => import('./pages/User/Checkout'));
 //admin pages
-const AdminLogin = lazy(() => import('./pages/Admin/AdminLogin'));
-const ProductsView = lazy(() => import('./pages/Admin/ProductsView'));
-const Products = lazy(() => import('./pages/Admin/Products'));
-const Users = lazy(() => import('./pages/Admin/Users'));
-//layouts
-const UserLayout = lazy(() => import('./layouts/UserLayout'));
-const AdminLayout = lazy(() => import('./layouts/AdminLayout'));
-//not found page
+const AdminLogin: LazyExoticComponent<React.ComponentType<{}>> = lazy(() => import('./pages/Admin/AdminLogin'));
+const ProductsView: LazyExoticComponent<React.ComponentType<{}>>  = lazy(() => import('./pages/Admin/ProductsView'));
+const Products: LazyExoticComponent<React.ComponentType<{}>>  = lazy(() => import('./pages/Admin/Products'));
+const Users: LazyExoticComponent<React.ComponentType<{}>>  = lazy(() => import('./pages/Admin/Users'));
+// layouts
+const UserLayout: LazyExoticComponent<React.ComponentType<{}>> = lazy(() => import('./layouts/UserLayout'));
+const AdminLayout: LazyExoticComponent<React.ComponentType<{}>>  = lazy(() => import('./layouts/AdminLayout'));
+// not found page
 import NotFoundPage from './pages/NotFoundPage';
 //loading component
 import Loading from './components/Common/Loading';
@@ -35,7 +35,7 @@ function App() {
               </Suspense>
             }
           />
-          <Route
+           <Route
             path='/register'
             element={
               <Suspense fallback={<Loading />}>
@@ -75,6 +75,7 @@ function App() {
               }
             />
           </Route>
+           
           {/* admin routes*/}
           <Route path='/admin'>
             <Route
@@ -128,7 +129,7 @@ function App() {
           </Route>
           {/* 404 not found */}
           <Route path='*' element={<NotFoundPage />} />
-        </Routes>
+        </Routes> 
       </Router>
       <Toaster position="top-center" reverseOrder={false} />
     </>

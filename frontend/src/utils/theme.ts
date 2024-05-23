@@ -1,6 +1,6 @@
 import { createTheme } from '@mui/material/styles';
 
-const theme = createTheme({
+const theme: any = createTheme({
   typography: {
     fontFamily: 'Inter, sans-serif',
     h1: {
@@ -35,12 +35,6 @@ const theme = createTheme({
       dark: '#b30000',
       contrastText: '#ffffff',
     },
-    accent: {
-      main: '#1ac065',
-      light: '#15844f',
-      dark: '#0a2c23',
-      contrastText: '#ffffff',
-    },
     text: {
       primary: '#4f4f66',
       secondary: '#676780',
@@ -48,25 +42,6 @@ const theme = createTheme({
     },
   },
   components: {
-    MuiButton: {
-      variants: {
-        solid: {
-          backgroundColor: '#754ffe',
-          color: '#ffffff',
-          '&:hover': {
-            backgroundColor: '#382189',
-          },
-        },
-        outlined: {
-          border: '1px solid',
-          borderColor: '#4f8dff',
-          color: '#4f8dff',
-          '&:hover': {
-            backgroundColor: '#dbe4ff',
-          },
-        },
-      },
-    },
     MuiInputBase: {
       styleOverrides: {
         root: {

@@ -1,3 +1,4 @@
+import { IProductFormModel } from '../../components/Admin/ProductsForm';
 import axiosInstance from './configs/axiosConfig';
 
 const API_ROUTES = {
@@ -9,7 +10,7 @@ const API_ROUTES = {
 };
 
 export const ProductAPI = {
-  createProduct: async (productData) => {
+  createProduct: async (productData: IProductFormModel) => {
     const response = await axiosInstance.post(
       API_ROUTES.CREATE_PRODUCT,
       productData
@@ -22,20 +23,22 @@ export const ProductAPI = {
     );
     return response.data;
   },
-  getProductById: async (productId) => {
+  getProductById: async (productId: string | undefined) => {
+    if(!productId) return;
     const response = await axiosInstance.get(
       API_ROUTES.GET_PRODUCT_BY_ID.replace(':id', productId)
     );
     return response.data;
   },
-  updateProduct: async (productId, updatedProductData) => {
+  updateProduct: async (productId: string, updatedProductData: IProductFormModel) => {
     const response = await axiosInstance.patch(
       API_ROUTES.UPDATE_PRODUCT.replace(':id', productId),
       updatedProductData
     );
     return response.data;
   },
-  deleteProduct: async (productId) => {
+  deleteProduct: async (productId: string | undefined) => {
+    if(!productId) return;
     const response = await axiosInstance.delete(
       API_ROUTES.DELETE_PRODUCT.replace(':id', productId)
     );

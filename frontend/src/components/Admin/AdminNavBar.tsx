@@ -10,26 +10,26 @@ import {
   Box,
   IconButton
 } from '@mui/material';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import PeopleIcon from '@mui/icons-material/People';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 const AdminNavBar = () => {
-  const [menuOpen, setMenuOpen] = React.useState(false);
+  const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
   const location = useLocation();
-  const navigate = useNavigate();
+  const navigate: NavigateFunction = useNavigate();
 
-  const handleDrawerToggle = () => {
+  const handleDrawerToggle = () : void => {
     setMenuOpen(!menuOpen);
   };
 
-  const handleLogout = () => {
+  const handleLogout = () : void => {
     const confirmed = window.confirm('Are you sure you want to log out?');
     if (confirmed) {
-      localStorage.clear('loggedInAdmin');
-      localStorage.clear('admin_token');
+      localStorage.removeItem('loggedInAdmin');
+      localStorage.removeItem('admin_token');
       navigate('/admin');
       window.location.reload();
     }
@@ -97,7 +97,7 @@ const AdminNavBar = () => {
 
           <ListItem
             onClick={handleLogout}
-            component={Link}
+            // component={Link}
           >
             <ListItemIcon>
               <ExitToAppIcon />

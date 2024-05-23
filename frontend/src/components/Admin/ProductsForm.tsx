@@ -8,46 +8,47 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { convertToBase64 } from '../../utils/helpers';
+import { convertToBase64, IResponse } from '../../utils/helpers';
 import {
   validateImage,
   validateTitle,
   validateCategory,
   validateDescription,
   validatePrice,
+  ErrorType,
 } from '../../utils/validation';
 import toast from 'react-hot-toast';
 import { ProductAPI } from '../../services/apis/productAPI';
 
-const ProductsForm = ({ productId }) => {
+const ProductsForm: React.FC<IProductFormPropModel> = ({ productId }: IProductFormPropModel) => {
   // states
-  const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
+  const [loading, setLoading] = useState<boolean>(false);
+  const [formData, setFormData] = useState<IProductFormModel>({
+    image: '',
+    title: '',
+    description: '',
+    price: 0,
+    category: '',
+  });
+
+  const [validationErrors, setValidationErrors] = useState<IValidationModel>({
     image: '',
     title: '',
     description: '',
     price: '',
     category: '',
   });
+  const [selectedImageName, setSelectedImageName] = useState<string>('');
 
-  const [validationErrors, setValidationErrors] = useState({
-    image: '',
-    title: '',
-    description: '',
-    price: '',
-    category: '',
-  });
-  const [selectedImageName, setSelectedImageName] = useState('');
+  const id : string | undefined = useParams().id;
+  const isEditMode: boolean = !!productId;
 
-  const { id } = useParams();
-  const isEditMode = !!productId;
-
-  const getProductById = async (productId) => {
+  const getProductById = async (productId: string | undefined) => {
     try {
-      const product = await ProductAPI.getProductById(productId);
+      const product: IResponse = await ProductAPI.getProductById(productId);
       setFormData(product.data);
       setSelectedImageName(product.data.image);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error:', error);
     }
   }
@@ -58,7 +59,7 @@ const ProductsForm = ({ productId }) => {
     }
   }, [id, isEditMode]);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -66,8 +67,13 @@ const ProductsForm = ({ productId }) => {
     }));
   };
 
-  const handleImageChange = async (e) => {
-    const file = e.target.files[0];
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) {
+      console.error('No files selected');
+      return;
+    }
+    const file = files[0];
     if (file) {
       setFormData((prevData) => ({
         ...prevData,
@@ -78,12 +84,12 @@ const ProductsForm = ({ productId }) => {
   };
 
   const handleValidate = () => {
-    const imageErrors = validateImage(formData.image);
-    const titleErrors = validateTitle(formData.title);
-    const descriptionErrors = validateDescription(formData.description);
-    const priceErrors = validatePrice(formData.price);
-    const categoryErrors = validateCategory(formData.category);
-    const errors = {
+    const imageErrors: ErrorType = validateImage(formData.image);
+    const titleErrors: ErrorType = validateTitle(formData.title);
+    const descriptionErrors: ErrorType = validateDescription(formData.description);
+    const priceErrors: ErrorType = validatePrice(formData.price);
+    const categoryErrors: ErrorType = validateCategory(formData.category);
+    const errors: any = {
       ...imageErrors,
       ...titleErrors,
       ...descriptionErrors,
@@ -95,7 +101,7 @@ const ProductsForm = ({ productId }) => {
     return hasErrors;
   }
 
-  const handleProductSubmit = async (e, action) => {
+  const handleProductSubmit = async (e: React.MouseEvent<HTMLElement>, action: string) => {
     e.preventDefault();
     if (handleValidate()) {
       return;
@@ -110,10 +116,10 @@ const ProductsForm = ({ productId }) => {
       if (action === 'add') {
         productResponse = await ProductAPI.createProduct(formData);
       } else if (action === 'edit') {
-        productResponse = await ProductAPI.updateProduct(productId, formData);
+        productResponse = await ProductAPI.updateProduct(productId || '', formData);
       }
       toast.success(productResponse.message);
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.response.data.message);
     } finally {
       setLoading(false);
@@ -122,7 +128,7 @@ const ProductsForm = ({ productId }) => {
           image: '',
           title: '',
           description: '',
-          price: '',
+          price: 0,
           category: '',
         });
         setSelectedImageName('');
@@ -141,7 +147,7 @@ const ProductsForm = ({ productId }) => {
         onChange={handleImageChange}
       />
       <label htmlFor='image'>
-        <Button variant='contained' component='span' color='primary' mb={2}>Upload Image</Button>
+        <Button variant='contained' component='span' color='primary' sx={{marginBottom: 2}}>Upload Image</Button>
       </label>
       {selectedImageName && (
         <Typography variant='subtitle1' mb={2}>{selectedImageName}</Typography>
@@ -208,3 +214,21 @@ const ProductsForm = ({ productId }) => {
 };
 
 export default ProductsForm;
+
+export interface IProductFormPropModel {
+  productId : string | undefined,
+}
+
+export interface IProductFormModel {
+  _id?: string, 
+  image: any,
+  title: string,
+  description: string,
+  price: number ,
+  category: string,
+  filter?: any,
+}
+
+export interface IValidationModel {
+  [key: string] : string,
+}

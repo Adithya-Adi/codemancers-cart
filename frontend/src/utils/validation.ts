@@ -1,5 +1,9 @@
-export const validateEmail = (email) => {
-  const errors = {};
+export interface ErrorType {
+  [key: string]: string,
+}
+
+export const validateEmail = (email: string) : ErrorType => {
+  const errors: ErrorType = {};
   if (!email) {
     errors.email = '* Email is required';
   } else {
@@ -11,40 +15,40 @@ export const validateEmail = (email) => {
   return errors;
 };
 
-export const validatePassword = (password) => {
-  const errors = {};
+export const validatePassword = (password: string) : ErrorType => {
+  const errors: ErrorType = {};
   if (!password) {
     errors.password = '* Password is required';
   }
   return errors;
 };
 
-export const validateImage = (image) => {
-  const errors = {};
+export const validateImage = (image: string) : ErrorType => {
+  const errors: ErrorType = {};
   if (!image) {
     errors.image = '* Image is required';
   }
   return errors;
 };
 
-export const validateTitle = (title) => {
-  const errors = {};
+export const validateTitle = (title: string) : ErrorType => {
+  const errors: ErrorType = {};
   if (!title.trim()) {
     errors.title = '* Title is required';
   }
   return errors;
 };
 
-export const validateDescription = (description) => {
-  const errors = {};
+export const validateDescription = (description: string) : ErrorType => {
+  const errors: ErrorType = {};
   if (!description.trim()) {
     errors.description = '* Description is required';
   }
   return errors;
 };
 
-export const validatePrice = (price) => {
-  const errors = {};
+export const validatePrice = (price: number) : ErrorType => {
+  const errors: ErrorType = {};
   if (!price) {
     errors.price = '* Price is required';
   } else if (isNaN(price) || price <= 0) {
@@ -53,24 +57,24 @@ export const validatePrice = (price) => {
   return errors;
 };
 
-export const validateCategory = (category) => {
-  const errors = {};
+export const validateCategory = (category: string) : ErrorType => {
+  const errors: ErrorType = {};
   if (!category.trim()) {
     errors.category = '* Category is required';
   }
   return errors;
 };
 
-export const validateName = (name) => {
-  const errors = {};
+export const validateName = (name: string) : ErrorType => {
+  const errors: ErrorType = {};
   if (!name.trim()) {
     errors.fullName = '* FullName is required';
   }
   return errors;
 };
 
-export const validatePhoneNumber = (phoneNumber) => {
-  const errors = {};
+export const validatePhoneNumber = (phoneNumber: string) : ErrorType => {
+  const errors: ErrorType = {};
   const phoneNumberPattern = /^\d{10}$/;
   if (!phoneNumber) {
     errors.phoneNumber = '* Phone number is required';
@@ -80,8 +84,8 @@ export const validatePhoneNumber = (phoneNumber) => {
   return errors;
 };
 
-export const validateConfirmPassword = (password, confirmPassword) => {
-  const errors = {};
+export const validateConfirmPassword = (password: string, confirmPassword: string) : ErrorType => {
+  const errors: ErrorType = {};
   if (!confirmPassword) {
     errors.cpassword = '* Confirm password is required';
   } else if (password !== confirmPassword) {
@@ -90,24 +94,24 @@ export const validateConfirmPassword = (password, confirmPassword) => {
   return errors;
 };
 
-export const validateAddress = (address) => {
-  const errors = {};
+export const validateAddress = (address: string) : ErrorType => {
+  const errors: ErrorType = {};
   if (!address.trim()) {
     errors.address = '* Address is required';
   }
   return errors;
 };
 
-export const validateCity = (city) => {
-  const errors = {};
+export const validateCity = (city: string) : ErrorType => {
+  const errors: ErrorType = {};
   if (!city.trim()) {
     errors.city = '* City is required';
   }
   return errors;
 };
 
-export const validatePostalCode = (postalCode) => {
-  const errors = {};
+export const validatePostalCode = (postalCode: string) : ErrorType => {
+  const errors: ErrorType = {};
   const postalCodePattern = /^\d{6}$/;
   if (!postalCode) {
     errors.postalCode = '* Postal code is required';
@@ -117,8 +121,8 @@ export const validatePostalCode = (postalCode) => {
   return errors;
 };
 
-export const validateCountry = (country) => {
-  const errors = {};
+export const validateCountry = (country: string) : ErrorType => {
+  const errors: ErrorType = {};
   if (!country.trim()) {
     errors.country = '* Country is required';
   }

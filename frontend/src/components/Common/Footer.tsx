@@ -1,6 +1,6 @@
 import { Box, Typography, Divider } from '@mui/material';
 
-const Footer = () => {
+const Footer: React.FC = () => {
   return (
     <>
       <Divider sx={{ marginTop: 4 }} />

@@ -11,6 +11,7 @@ import { styled } from '@mui/material/styles';
 import toast from 'react-hot-toast';
 import { CartAPI } from '../../services/apis/cartAPI';
 import { useEffect, useState } from 'react';
+import { IProductModel, ICartDetailsModel, IResponse, IProductInCartModel } from '../../utils/helpers';
 
 const StyledCard = styled(Card)(() => ({
   display: 'flex',
@@ -29,39 +30,39 @@ const StyledCardContent = styled(CardContent)(() => ({
 }));
 
 
-const ProductCard = ({ product, cartDetails }) => {
-  const [loading, setLoading] = useState(false);
-  const [isInCart, setIsInCart] = useState([]);
+const ProductCard : React.FC<ProductCartPropTypes> = ({ product, cartDetails }: ProductCartPropTypes) => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [isInCart, setIsInCart] = useState<boolean>(false);
   const { _id, title, price, image, description } = product;
-  const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+  const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
 
   useEffect(() => {
-    const isIn = cartDetails?.products?.some(item => item.productId === _id)
+    const isIn = cartDetails?.products?.some((item: IProductInCartModel) => item.productId === _id)
     setIsInCart(isIn);
   }, [_id, cartDetails]);
 
-  const handleAddToCart = async (e) => {
+  const handleAddToCart = async (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
     try {
       setLoading(true);
-      const addToCartResponse = await CartAPI.addToCart(loggedInUser._id, _id);
+      const addToCartResponse : IResponse = await CartAPI.addToCart(loggedInUser._id, _id);
       toast.success(addToCartResponse.message);
       setIsInCart(true);
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.response.data.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleRemoveFromCart = async (e) => {
+  const handleRemoveFromCart = async (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
     try {
       setLoading(true);
-      const removeFromCartResponse = await CartAPI.removeFromCart(loggedInUser._id, _id)
+      const removeFromCartResponse: IResponse = await CartAPI.removeFromCart(loggedInUser._id, _id)
       toast.success(removeFromCartResponse.message);
       setIsInCart(false);
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.response.data.message);
     } finally {
       setLoading(false);
@@ -106,3 +107,8 @@ const ProductCard = ({ product, cartDetails }) => {
 };
 
 export default ProductCard;
+
+interface ProductCartPropTypes {
+  product: IProductModel,
+  cartDetails : ICartDetailsModel | undefined,
+}

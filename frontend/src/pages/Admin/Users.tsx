@@ -14,15 +14,15 @@ import { UserAPI } from '../../services/apis/userAPI';
 
 const Users = () => {
   //states
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [users, setUsers] = useState<IUsers[] | undefined>(undefined);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const getAllUsers = async () => {
+  const getAllUsers = async () : Promise<void> => {
     try {
       setLoading(true);
       const allUsers = await UserAPI.getAllUsers();
       setUsers(allUsers.data);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error:', error.message);
     } finally {
       setLoading(false);
@@ -51,7 +51,7 @@ const Users = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {users.map((user) => (
+              {users?.map((user: IUsers) => (
                 <TableRow key={user._id}>
                   <TableCell>{user.fullName}</TableCell>
                   <TableCell>{user.email}</TableCell>
@@ -67,3 +67,11 @@ const Users = () => {
 };
 
 export default Users;
+
+export interface IUsers {
+  _id: string,
+  fullName: string,
+  email: string,
+  phoneNumber: string,
+  map?: any,
+}

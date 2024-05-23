@@ -3,8 +3,8 @@ import Footer from '../components/Common/Footer';
 import { Outlet, Navigate } from 'react-router-dom';
 
 function UserLayout() {
-  const isLoggedIn = localStorage.getItem('loggedInUser');
-  const token = localStorage.getItem('token');
+  const isLoggedIn : string | null = localStorage.getItem('loggedInUser');
+  const token : string | null = localStorage.getItem('token');
   if (!isLoggedIn || !token) {
     return <Navigate to="/" />;
   }

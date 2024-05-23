@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { Remove as RemoveIcon, Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import { IProductInCartModel } from '../../utils/helpers';
 
 const StyledCard = styled(Card)(() => ({
   display: 'flex',
@@ -22,7 +23,8 @@ const StyledCardContent = styled(CardContent)(() => ({
   padding: 2
 }));
 
-const CartCard = ({ item, increaseQuantity, decreaseQuantity, removeItem }) => {
+
+const CartCard: React.FC<CartCardPropsType> = ({ item, increaseQuantity, decreaseQuantity, removeItem } : CartCardPropsType) => {
   const { title, price, image, quantity } = item;
 
   return (
@@ -64,3 +66,10 @@ const CartCard = ({ item, increaseQuantity, decreaseQuantity, removeItem }) => {
 };
 
 export default CartCard;
+
+interface CartCardPropsType {
+  item : IProductInCartModel,
+  increaseQuantity: (productId: string) => void,
+  decreaseQuantity : (productId: string) => void,
+  removeItem : (productId: string) => void,
+}

@@ -11,21 +11,23 @@ import {
   Box,
   CircularProgress,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { ProductAPI } from '../../services/apis/productAPI';
 import toast from 'react-hot-toast';
+import { IProductFormModel } from '../../components/Admin/ProductsForm';
+import { IResponse } from '../../utils/helpers';
 
-const ProductsView = () => {
+const ProductsView: React.FC = () => {
   // states
-  const [loading, setLoading] = useState(false);
-  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [products, setProducts] = useState<IProductFormModel[] | undefined>(undefined);
 
-  const navigate = useNavigate();
+  const navigate: NavigateFunction = useNavigate();
 
-  const getAllProducts = async () => {
+  const getAllProducts = async () : Promise<void> => {
     try {
       setLoading(true);
-      const allProducts = await ProductAPI.getAllProducts();
+      const allProducts: IResponse = await ProductAPI.getAllProducts();
       setProducts(allProducts.data);
     } catch (error) {
       console.error('Error:', error);
@@ -38,27 +40,26 @@ const ProductsView = () => {
     getAllProducts();
   }, [])
 
-  const handleEdit = (productId) => {
+  const handleEdit = (productId: string | undefined) => {
     navigate(`/admin/products/${productId}`);
   };
 
-  const handleDelete = async (productId) => {
+  const handleDelete = async (productId: string | undefined) : Promise<void> => {
     const confirmed = window.confirm('Are you sure you want to delete this product?');
     if (!confirmed) {
       return;
     }
     try {
       const deleteProductResponse = await ProductAPI.deleteProduct(productId);
-      const updatedProducts = products.filter(product => product._id !== productId);
+      const updatedProducts = products?.filter((product: IProductFormModel) => product._id !== productId);
       setProducts(updatedProducts);
       toast.success(deleteProductResponse.message);
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.response.data.message)
     }
   };
 
-
-  const handleAddProduct = () => {
+  const handleAddProduct = () : void => {
     navigate('/admin/products');
   };
 
@@ -91,7 +92,7 @@ const ProductsView = () => {
                 {products?.map((product) => (
                   <TableRow key={product._id}>
                     <TableCell>
-                      <img src={product.image} alt={product.name} style={{ width: 50, height: 50 }} />
+                      <img src={product.image} alt={product.title} style={{ width: 50, height: 50 }} />
                     </TableCell>
                     <TableCell>{product.title}</TableCell>
                     <TableCell>{product.description}</TableCell>
