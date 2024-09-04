@@ -9,6 +9,8 @@ const API_ROUTES = {
   CLEAR_USER_CART: '/cart/:userId',
 };
 
+// asdjasdnsalkd
+
 export const CartAPI = {
   addToCart: async (userId: string, productId: string) => {
     const route = API_ROUTES.ADD_TO_CART.replace(':userId', userId).replace(':productId', productId);
