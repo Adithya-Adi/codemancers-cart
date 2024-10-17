@@ -1,4 +1,4 @@
-import { Box, Typography, Divider } from '@mui/material';
+import { Box, Typography, Divider, Link } from '@mui/material';
 
 const Footer: React.FC = () => {
   return (
@@ -16,6 +16,9 @@ const Footer: React.FC = () => {
         <Typography variant='body2'>
           &copy; 2024 Codemancers-Cart. All rights reserved.
         </Typography>
+        <Link href="/" color="inherit" sx={{ marginTop: 1, display: 'inline-block' }}>
+          Home
+        </Link>
       </Box>
     </>
   );
