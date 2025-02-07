@@ -7,7 +7,7 @@ const NotFoundPage = () : ReactElement => {
   return (
     <div style={{ textAlign: 'center' }}>
       <img src={notFoundImage} alt='404 Not Found' style={{ width: '100%', maxWidth: '700px', margin: 'auto' }} />
-      <p><Button component={Link} to='/' variant='contained' style={{ backgroundColor: 'red' }}>Home</Button></p>
+      <p><Button component={Link} to='/' variant='contained' style={{ backgroundColor: 'black' }}>Home</Button></p>
     </div>
   );
 }
