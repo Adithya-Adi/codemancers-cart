@@ -24,7 +24,7 @@ const NavBar : React.FC = () => {
     <AppBar position='static' sx={{ marginBottom: '30px' }}>
       <Toolbar>
         <Typography variant='h6' component='div' sx={{ flexGrow: 1, color: '#fff' }} onClick={() => navigate('/home')}>
-          <IconButton color='inherit'>Codemancers-Cart </IconButton>
+          <IconButton color='inherit' sx={{ color: 'red' }}>Codemancers-Cart </IconButton>
         </Typography>
         <IconButton
           size='large'
